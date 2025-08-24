@@ -75,8 +75,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@nestjs/core",
-      "@swc/core"
+      "@nestjs/core"
     ]
   }
 }
