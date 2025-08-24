@@ -20,3 +20,5 @@ jobs:
         run: npm ci # Installs project dependencies
       - name: Run tests
         run: npm test # Executes the npm test command
+      - name: Run E2E tests
+        run: npm test:e2e # Executes the npm test command
