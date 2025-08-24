@@ -5,7 +5,7 @@ export class EnvironmentVariables {
   @IsString()
   readonly NODE_ENV: string;
 
-  @Transform(({ value }) => parseInt(value, 10))
+  @Transform(({ value }: { value: string }) => parseInt(value, 10))
   @IsInt()
   @Min(0)
   @Max(65535)

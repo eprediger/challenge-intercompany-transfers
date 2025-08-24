@@ -1,14 +1,12 @@
-import { CompanyTypes } from "../company.type";
+import { randomUUID, UUID } from 'node:crypto';
+import { CompanyTypes } from '../company.type';
 
 export class Company {
-  static ID: number = 1;
-
-  public readonly id: number;
-
   constructor(
     public readonly name: string,
-    public readonly type: CompanyTypes
+    public readonly type: CompanyTypes,
+    public readonly id?: UUID,
   ) {
-    this.id = Company.ID++;
+    this.id = id || randomUUID();
   }
 }

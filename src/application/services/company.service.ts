@@ -5,6 +5,8 @@ import { Company } from '../domain/entities/company';
 
 @Injectable()
 export class CompanyService implements ICompanyService {
+  constructor() {}
+
   create(dto: CreateCompanyDto): Company {
     return new Company(dto.name, dto.type);
   }

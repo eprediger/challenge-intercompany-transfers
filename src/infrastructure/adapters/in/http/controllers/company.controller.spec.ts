@@ -3,7 +3,6 @@ import { CompanyController } from './company.controller';
 import { CompanyTypes } from 'src/application/domain/company.type';
 import { CompanyService } from 'src/application/services/company.service';
 
-
 describe('AppController', () => {
   let app: TestingModule;
   let controller: CompanyController;
@@ -14,8 +13,8 @@ describe('AppController', () => {
       providers: [
         {
           provide: 'ICompanyService',
-          useClass: CompanyService
-        }
+          useClass: CompanyService,
+        },
       ],
     }).compile();
 
@@ -23,12 +22,16 @@ describe('AppController', () => {
   });
 
   describe('Company creation', () => {
-    it('should return a new company', () => {
-      const companyDto = {
-        name: 'Small Company',
-        type: CompanyTypes.PYME
-      };
-
+    it.each([
+      {
+        name: 'Acme Corporation',
+        type: CompanyTypes.PYME,
+      },
+      {
+        name: 'Stark Industries',
+        type: CompanyTypes.CORPORATIVA,
+      },
+    ])('should return a new company', (companyDto) => {
       const result = controller.create(companyDto);
 
       expect(result).toHaveProperty('id');

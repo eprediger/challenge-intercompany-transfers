@@ -1,14 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { Expose } from 'class-transformer';
+import type { UUID } from 'crypto';
 import { CompanyTypes } from 'src/application/domain/company.type';
 
-export class CreateCompanyDto {
+export class CompanyResponseDto {
+  @ApiProperty({
+    description: 'Unique identifier of the company',
+    example: 'b3b7c8e2-1f2a-4c3d-9e4f-123456789abc',
+    type: 'string',
+    format: 'uuid',
+  })
+  @Expose()
+  id: UUID;
+
   @ApiProperty({
     description: 'Name of the company',
     example: 'Acme Corporation',
   })
-  @IsString()
-  @IsNotEmpty()
+  @Expose()
   name: string;
 
   @ApiProperty({
@@ -17,6 +26,6 @@ export class CreateCompanyDto {
       'Type of the company. Possible values: ' +
       Object.values(CompanyTypes).join(', '),
   })
-  @IsEnum(CompanyTypes)
+  @Expose()
   type: CompanyTypes;
 }

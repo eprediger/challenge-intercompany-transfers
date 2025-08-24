@@ -7,8 +7,8 @@ import { CompanyController } from '../adapters/in/http/controllers/company.contr
   providers: [
     {
       provide: 'ICompanyService',
-      useClass: CompanyService
-    }
+      useClass: CompanyService,
+    },
   ],
 })
-export class CompanyModule { }
+export class CompanyModule {}

@@ -8,7 +8,7 @@ import { CompanyModule } from './company.module';
     ConfigModule.forRoot({
       validate,
     }),
-    CompanyModule
+    CompanyModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
