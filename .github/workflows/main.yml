@@ -7,8 +7,11 @@ on:
     branches: ['main']
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: 'testing'
+      PORT: 3000
 
     steps:
       - uses: actions/checkout@v4 # Checks out your repository code
@@ -21,4 +24,4 @@ jobs:
       - name: Run tests
         run: npm test # Executes the npm test command
       - name: Run E2E tests
-        run: npm test:e2e # Executes the npm test command
+        run: npm run test:e2e # Executes the npm test command
