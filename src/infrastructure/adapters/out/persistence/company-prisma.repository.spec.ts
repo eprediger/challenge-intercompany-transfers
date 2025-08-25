@@ -13,6 +13,9 @@ describe('CompanyPrismaRepository (integration)', () => {
   beforeAll(async () => {
     prismaClient = new PrismaClient();
 
+    // Clean up the database before running tests
+    await prismaClient.company.deleteMany();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CompanyPrismaRepository,
@@ -26,11 +29,6 @@ describe('CompanyPrismaRepository (integration)', () => {
     }).compile();
 
     repository = module.get<CompanyPrismaRepository>(CompanyPrismaRepository);
-  });
-
-  beforeEach(async () => {
-    // Clean up the database before running tests
-    await prismaClient.company.deleteMany();
   });
 
   afterEach(async () => {
@@ -76,6 +74,49 @@ describe('CompanyPrismaRepository (integration)', () => {
 
       // The repository should return the same company instance
       expect(actualCompany).toBe(expectedCompany);
+    });
+  });
+
+  describe('find', () => {
+    const expectedCompany = new Company(
+      'Wonka Industries',
+      CompanyTypes.Pyme,
+      new Date('2025-08-05T20:00:00.000Z'),
+    );
+
+    beforeAll(async () => {
+      await Promise.all(
+        [
+          new Company(
+            'Acme Corporation',
+            CompanyTypes.Pyme,
+            new Date('2025-02-17T14:00:00.000Z'),
+          ),
+          new Company(
+            'Stark Industries',
+            CompanyTypes.Corporativa,
+            new Date('2025-06-28T09:00:00.000Z'),
+          ),
+          expectedCompany,
+        ].map((company) => repository.create(company)),
+      );
+    });
+
+    it('should return companies created within a given date range', async () => {
+      const subscriptionDateFrom = new Date('2025-07-25T00:00:00.000Z');
+      const subscriptionDateTo = new Date('2025-08-25T23:59:59.999Z');
+
+      const foundCompanies = await repository.find({
+        subscriptionDateFrom,
+        subscriptionDateTo,
+      });
+
+      expect(foundCompanies).toHaveLength(1);
+      expect(foundCompanies[0].name).toBe(expectedCompany.name);
+      expect(foundCompanies[0].type).toBe(expectedCompany.type);
+      expect(foundCompanies[0].subscriptionDate.toISOString()).toBe(
+        expectedCompany.subscriptionDate.toISOString(),
+      );
     });
   });
 });

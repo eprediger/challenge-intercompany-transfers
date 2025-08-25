@@ -8,9 +8,16 @@ export class CompanyService implements ICompanyService {
   constructor(
     @Inject('ICompanyRepository')
     private readonly companyRepository: ICompanyRepository,
-  ) {}
+  ) { }
 
   async create(company: Company): Promise<Company> {
     return this.companyRepository.create(company);
+  }
+
+  find(params: { subscriptionDateFrom: Date; subscriptionDateTo: Date; }): Promise<Company[]> {
+    return this.companyRepository.find({
+      subscriptionDateFrom: params.subscriptionDateFrom,
+      subscriptionDateTo: params.subscriptionDateTo
+    })
   }
 }

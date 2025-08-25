@@ -29,7 +29,14 @@ describe('CompanyController (e2e)', () => {
     app.enableVersioning({
       type: VersioningType.URI,
     });
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      whitelist: true,
+      forbidNonWhitelisted: false,
+    }));
 
     await app.init();
   });
@@ -38,35 +45,77 @@ describe('CompanyController (e2e)', () => {
     await app.close();
   });
 
-  it('should create a new company', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/v1/companies')
-      .send({
-        name: 'Company Name',
-        type: 'Corporativa',
-        subscriptionDate: '2025-08-25T13:47:24.108Z',
-      });
-
-    expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toHaveProperty('id');
-  });
-
-  it.each(['name', 'type', 'subscriptionDate'])(
-    'should response bad request for incomplete bodies',
-    async (propertyName) => {
-      const requestBody = {
-        name: 'Company Name',
-        type: 'Corporativa',
-        subscriptionDate: '2025-08-25T13:47:24.108Z',
-      };
-
-      delete requestBody[propertyName];
-
+  describe('Company Creation', () => {
+    it('should create a new company', async () => {
       const response = await request(app.getHttpServer())
         .post('/v1/companies')
-        .send(requestBody);
+        .send({
+          name: 'Company Name',
+          type: 'Corporativa',
+          subscriptionDate: '2025-08-25T13:47:24.108Z',
+        });
 
-      expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-    },
-  );
+      expect(response.status).toBe(HttpStatus.CREATED);
+      expect(response.body).toHaveProperty('id');
+    });
+
+    it.each(['name', 'type', 'subscriptionDate'])(
+      'should response bad request for incomplete bodies',
+      async (propertyName) => {
+        const requestBody = {
+          name: 'Company Name',
+          type: 'Corporativa',
+          subscriptionDate: '2025-08-25T13:47:24.108Z',
+        };
+
+        delete requestBody[propertyName];
+
+        const response = await request(app.getHttpServer())
+          .post('/v1/companies')
+          .send(requestBody);
+
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+      },
+    );
+  });
+
+  describe('Company Querying', () => {
+    const expectedCompany = {
+      name: 'Wonka Industries',
+      type: 'Pyme',
+      subscriptionDate: '2025-08-05T20:00:00.000Z',
+    };
+    beforeAll(async () => {
+      await Promise.all([
+        {
+          name: 'Acme Corporation',
+          type: 'Pyme',
+          subscriptionDate: '2025-02-17T14:00:00.000Z',
+        },
+        {
+          name: 'Stark Industries',
+          type: 'Corporativa',
+          subscriptionDate: '2025-06-28T09:00:00.000Z',
+        },
+        expectedCompany,
+      ].map((company) =>
+        request(app.getHttpServer()).post('/v1/companies').send(company),
+      ));
+    });
+
+    it('should return companies created given a time period', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/v1/companies')
+        .query({
+          'subscription-date-from': '2025-07-25',
+          'subscription-date-to': '2025-08-25',
+        });
+
+      expect(response.status).toBe(HttpStatus.OK);
+      expect(response.body).toHaveLength(1);
+      expect(response.body).toEqual(
+        expect.arrayContaining([expect.objectContaining(expectedCompany)]),
+      );
+    });
+  });
 });

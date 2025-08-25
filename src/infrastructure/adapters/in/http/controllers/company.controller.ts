@@ -1,10 +1,11 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Company } from 'src/application/domain/entities/company';
-import { CreateCompanyDto } from '../dto/create-company.dto';
 import { plainToInstance } from 'class-transformer';
-import { CompanyResponseDto } from '../dto/company-response.dto';
+import { Company } from 'src/application/domain/entities/company';
 import type { ICompanyService } from 'src/application/ports/in/services/company.service.interface';
+import { CompanyResponseDto } from '../dto/company-response.dto';
+import { CreateCompanyDto } from '../dto/create-company.dto';
+import { CompanyQueryParams } from '../dto/company-query-params.dto';
 
 @Controller({
   path: 'companies',
@@ -14,7 +15,7 @@ import type { ICompanyService } from 'src/application/ports/in/services/company.
 export class CompanyController {
   constructor(
     @Inject('ICompanyService') private readonly service: ICompanyService,
-  ) {}
+  ) { }
 
   @Post()
   @ApiResponse({
@@ -36,5 +37,28 @@ export class CompanyController {
     });
 
     return companyResponseDto;
+  }
+
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'List of companies filtered by subscription date range.',
+    type: [CompanyResponseDto],
+  })
+  async find(
+    @Query() query: CompanyQueryParams,
+  ): Promise<CompanyResponseDto[]> {
+    const companies = await this.service.find(
+      {
+        subscriptionDateFrom: query.subscriptionDateFrom,
+        subscriptionDateTo: query.subscriptionDateTo
+      }
+    );
+    // Transform to response DTOs
+    return companies.map((company) =>
+      plainToInstance(CompanyResponseDto, company, {
+        excludeExtraneousValues: true,
+      }),
+    );
   }
 }

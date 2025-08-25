@@ -10,7 +10,17 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
-  app.useGlobalPipes(new ValidationPipe());
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      whitelist: true, // Remove properties that don't have decorators
+      forbidNonWhitelisted: false, // Don't throw error for non-whitelisted properties (just remove them)
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Intercompany transfers')

@@ -3,6 +3,8 @@ import { Company } from 'src/application/domain/entities/company';
 import { ICompanyRepository } from 'src/application/ports/out/repositories/company.repository.interface';
 import { PrismaService } from './prisma.service';
 import { Prisma } from '@prisma/client';
+import { UUID } from 'node:crypto';
+import { CompanyTypes } from 'src/application/domain/company.type';
 
 @Injectable()
 export class CompanyPrismaRepository implements ICompanyRepository {
@@ -18,5 +20,29 @@ export class CompanyPrismaRepository implements ICompanyRepository {
     await this.prismaService.company.create({ data: companyCreateInput });
 
     return company;
+  }
+
+  async find(params: {
+    subscriptionDateFrom: Date;
+    subscriptionDateTo: Date;
+  }): Promise<Company[]> {
+    const rows = await this.prismaService.company.findMany({
+      where: {
+        subscriptionDate: {
+          gte: params.subscriptionDateFrom,
+          lte: params.subscriptionDateTo,
+        },
+      },
+    });
+
+    return rows.map(
+      (row) =>
+        new Company(
+          row.name,
+          row.type as CompanyTypes,
+          row.subscriptionDate,
+          row.id as UUID,
+        ),
+    );
   }
 }

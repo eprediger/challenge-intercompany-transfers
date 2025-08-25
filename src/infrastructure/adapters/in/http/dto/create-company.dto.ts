@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { CompanyTypes } from 'src/application/domain/company.type';
 
 export class CreateCompanyDto {
@@ -28,6 +29,7 @@ export class CreateCompanyDto {
     format: 'date-time',
   })
   @IsNotEmpty()
-  @IsDateString()
+  @Type(() => Date)
+  @IsDate()
   subscriptionDate: Date;
 }
