@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Acme Corporation",
+    "type": "Pyme",
+    "subscriptionDate": "2025-02-17T14:00:00.000Z"
+  },
+  {
+    "name": "Stark Industries",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-06-28T09:00:00.000Z"
+  },
+  {
+    "name": "Wonka Industries",
+    "type": "Pyme",
+    "subscriptionDate": "2025-01-05T20:00:00.000Z"
+  },
+  {
+    "name": "Umbrella Corporation",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-04-13T03:00:00.000Z"
+  },
+  {
+    "name": "Weyland-Yutani Corporation",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-07-09T18:00:00.000Z"
+  },
+  {
+    "name": "Cyberdyne Systems",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-03-30T11:00:00.000Z"
+  },
+  {
+    "name": "Momcorp",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-05-22T07:00:00.000Z"
+  },
+  {
+    "name": "Wayne Enterprises",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-01-28T16:00:00.000Z"
+  },
+  {
+    "name": "Dunder Mifflin",
+    "type": "Pyme",
+    "subscriptionDate": "2025-08-03T21:00:00.000Z"
+  },
+  {
+    "name": "Soylent Corporation",
+    "type": "Pyme",
+    "subscriptionDate": "2025-03-08T05:00:00.000Z"
+  }
+]

@@ -1,8 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CompanyController } from './company.controller';
 import { CompanyTypes } from 'src/application/domain/company.type';
-import { CompanyService } from 'src/application/services/company.service';
-import { CreateCompanyDto } from '../dto/create-company.dto';
+import { CompanyController } from './company.controller';
 
 describe('AppController', () => {
   let app: TestingModule;
@@ -15,7 +13,7 @@ describe('AppController', () => {
         {
           provide: 'ICompanyService',
           useValue: {
-            create: jest.fn()
+            create: jest.fn(),
           },
         },
       ],
@@ -29,13 +27,15 @@ describe('AppController', () => {
       {
         name: 'Acme Corporation',
         type: CompanyTypes.Pyme,
+        subscriptionDate: new Date(),
       },
       {
         name: 'Stark Industries',
         type: CompanyTypes.Corporativa,
+        subscriptionDate: new Date(),
       },
-    ])('should return a new company', (companyDto) => {
-      const result = controller.create(companyDto);
+    ])('should return a new company', async (companyDto) => {
+      const result = await controller.create(companyDto);
 
       expect(result).toHaveProperty('id');
       expect(result).toMatchObject(companyDto);

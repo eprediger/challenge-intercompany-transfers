@@ -14,7 +14,7 @@ import type { ICompanyService } from 'src/application/ports/in/services/company.
 export class CompanyController {
   constructor(
     @Inject('ICompanyService') private readonly service: ICompanyService,
-  ) { }
+  ) {}
 
   @Post()
   @ApiResponse({
@@ -26,10 +26,10 @@ export class CompanyController {
     status: 400,
     description: 'Bad Request. Validation failed for the input data.',
   })
-  create(@Body() dto: CreateCompanyDto): Company {
-    const company = new Company(dto.name, dto.type);
+  async create(@Body() dto: CreateCompanyDto): Promise<Company> {
+    const company = new Company(dto.name, dto.type, dto.subscriptionDate);
 
-    this.service.create(company);
+    await this.service.create(company);
 
     const companyResponseDto = plainToInstance(CompanyResponseDto, company, {
       excludeExtraneousValues: true,

@@ -13,6 +13,8 @@ export class EnvironmentVariables {
 
   @IsString()
   @IsString()
-  @Matches(/^file:\.\/\w+\.db$/, { message: 'DATABASE_URL must match the pattern file:./<name>.db' })
+  @Matches(/^file:\.\/\w+\.db$/, {
+    message: 'DATABASE_URL must match the pattern file:./<name>.db',
+  })
   readonly DATABASE_URL: string;
 }

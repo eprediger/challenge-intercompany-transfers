@@ -1,20 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaClient } from '@prisma/client';
+import { randomUUID } from 'node:crypto';
 import { CompanyTypes } from 'src/application/domain/company.type';
 import { Company } from 'src/application/domain/entities/company';
 import { CompanyPrismaRepository } from './company-prisma.repository';
 import { PrismaService } from './prisma.service';
-import { PrismaClient } from '@prisma/client';
-import { randomUUID, UUID } from 'node:crypto';
 
 describe('CompanyPrismaRepository (integration)', () => {
   let repository: CompanyPrismaRepository;
-  let prismaService: PrismaService;
   let prismaClient: PrismaClient;
 
   beforeAll(async () => {
     prismaClient = new PrismaClient();
-    // Optionally, clean up the database before running tests
-    await prismaClient.company.deleteMany();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -29,21 +26,37 @@ describe('CompanyPrismaRepository (integration)', () => {
     }).compile();
 
     repository = module.get<CompanyPrismaRepository>(CompanyPrismaRepository);
-    prismaService = module.get<PrismaService>(PrismaService);
+  });
+
+  beforeEach(async () => {
+    // Clean up the database before running tests
+    await prismaClient.company.deleteMany();
+  });
+
+  afterEach(async () => {
+    // Clean up after tests
+    await prismaClient.company.deleteMany();
   });
 
   afterAll(async () => {
-    // Clean up after tests
-    await prismaClient.company.deleteMany();
     await prismaClient.$disconnect();
   });
 
   describe('create', () => {
     it('should create a company in the database and return it', async () => {
-      const expectedCompanyId: UUID = randomUUID();
-      const expectedCompanyName = 'Acme Corp';
-      const expectedCompanyType = CompanyTypes.Pyme;
-      const expectedCompany = new Company(expectedCompanyName, expectedCompanyType, expectedCompanyId);
+      const companyDto = {
+        id: randomUUID(),
+        name: 'Acme Corp',
+        type: CompanyTypes.Pyme,
+        subscriptionDate: new Date('2024-06-01T00:00:00Z'),
+      };
+
+      const expectedCompany = new Company(
+        companyDto.name,
+        companyDto.type,
+        companyDto.subscriptionDate,
+        companyDto.id,
+      );
 
       const actualCompany = await repository.create(expectedCompany);
 
@@ -53,9 +66,13 @@ describe('CompanyPrismaRepository (integration)', () => {
       });
 
       expect(dbCompany).not.toBeNull();
-      expect(dbCompany.id).toBe(expectedCompanyId);
-      expect(dbCompany.name).toBe(expectedCompanyName);
-      expect(dbCompany.type).toBe(expectedCompanyType);
+
+      expect(dbCompany.id).toEqual(expectedCompany.id);
+      expect(dbCompany.name).toBe(expectedCompany.name);
+      expect(dbCompany.type).toBe(expectedCompany.type);
+      expect(dbCompany.subscriptionDate).toEqual(
+        expectedCompany.subscriptionDate,
+      );
 
       // The repository should return the same company instance
       expect(actualCompany).toBe(expectedCompany);

@@ -5,6 +5,7 @@ export class Company {
   constructor(
     public readonly name: string,
     public readonly type: CompanyTypes,
+    public readonly subscriptionDate: Date,
     public readonly id?: UUID,
   ) {
     this.id = id || randomUUID();

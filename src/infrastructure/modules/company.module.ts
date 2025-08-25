@@ -18,4 +18,4 @@ import { CompanyPrismaRepository } from '../adapters/out/persistence/company-pri
     },
   ],
 })
-export class CompanyModule { }
+export class CompanyModule {}

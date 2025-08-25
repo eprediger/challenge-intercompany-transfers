@@ -5,9 +5,12 @@ import type { ICompanyRepository } from '../ports/out/repositories/company.repos
 
 @Injectable()
 export class CompanyService implements ICompanyService {
-  constructor(@Inject('ICompanyRepository') private readonly companyRepository: ICompanyRepository) { }
+  constructor(
+    @Inject('ICompanyRepository')
+    private readonly companyRepository: ICompanyRepository,
+  ) {}
 
   async create(company: Company): Promise<Company> {
-    return this.companyRepository.create(company)
+    return this.companyRepository.create(company);
   }
 }

@@ -15,9 +15,10 @@ datasource db {
 }
 
 model Company {
-  id   String      @id
-  name String
-  type CompanyType
+  id                String      @id
+  name              String
+  type              CompanyType
+  subscriptionDate  DateTime    @map("subscription_date")
 
   @@map("companies")
 }

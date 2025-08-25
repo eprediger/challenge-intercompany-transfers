@@ -9,7 +9,8 @@
 - Tanto para la estructura de carpetas como el diseño de la aplicación aplican la Arquitectura Hexagonal
 - Se identificaron las siguientes entidades:
   - Empresa (`Company`)
-- Persistencia: se optó por una instancia de SQLite
+    - Con los atributos nombre (name), tipo (`type`) y fecha de adhesión (`subscriptionDate`). Sobre el último campo se tomó la decisión de permitir al cliente ingresar el valor, esto es, que la adhesión no necesariamente sea en el momento de la creación en la aplicación.
+- Persistencia: se optó por una instancia de `SQLite`
 
 ## Documentación
 
@@ -27,3 +28,7 @@ Crear archivo `.env` (`$ cp .env.example .env`)
 ### Migraciones
 
 Tras cada modificación en el modelo de datos, definido en el archivo `schema.prisma`, crear una migración mediante `npx prisma migrate dev --name <nombre-migracion>`
+
+### Database seeding
+
+El comando `$  npm run db:seed` genera valores iniciales para las tablas.

@@ -28,4 +28,12 @@ export class CompanyResponseDto {
   })
   @Expose()
   type: CompanyTypes;
+
+  @ApiProperty({
+    description:
+      'Date when the company was created or joined. Must be a valid ISO 8601 date string.',
+    example: '2024-06-01T00:00:00.000Z',
+  })
+  @Expose()
+  subscriptionDate: Date;
 }

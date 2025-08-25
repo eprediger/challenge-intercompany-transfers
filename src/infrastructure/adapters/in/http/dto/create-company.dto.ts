@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { CompanyTypes } from 'src/application/domain/company.type';
 
 export class CreateCompanyDto {
@@ -19,4 +19,15 @@ export class CreateCompanyDto {
   })
   @IsEnum(CompanyTypes)
   type: CompanyTypes;
+
+  @ApiProperty({
+    description:
+      'Date when the company was created or joined. Must be a valid ISO 8601 date string.',
+    example: '2025-08-25T13:47:24.108Z',
+    type: String,
+    format: 'date-time',
+  })
+  @IsNotEmpty()
+  @IsDateString()
+  subscriptionDate: Date;
 }

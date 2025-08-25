@@ -31,9 +31,9 @@ Debes implementar los siguientes 3 endpoints:
 Diseñar una Lambda Function de AWS que reciba una solicitud de adhesión de empresa (como en el punto 3), valide los datos y los almacene.
 Incluí:
 
-- Código de la Lambda
-- Input/output esperados (formato JSON)
-- Breve explicación de cómo la integrarías con el sistema
+- [ ] Código de la Lambda
+- [ ] Input/output esperados (formato JSON)
+- [ ] Breve explicación de cómo la integrarías con el sistema
 
 La Lambda no debe ser ejecutada ni desplegada. Solo necesitamos el diseño funcional y su código fuente.
 
