@@ -4,7 +4,9 @@ import {
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
+import { validate } from 'src/infrastructure/config/validate';
 import { CompanyModule } from 'src/infrastructure/modules/company.module';
 import request from 'supertest';
 import { App } from 'supertest/types';
@@ -14,7 +16,13 @@ describe('CompanyController (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
-      imports: [CompanyModule],
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: '.env.test',
+          validate,
+        }),
+        CompanyModule,
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -30,12 +38,13 @@ describe('CompanyController (e2e)', () => {
     await app.close();
   });
 
+
   it('should create a new company', async () => {
     const response = await request(app.getHttpServer())
       .post('/v1/companies')
       .send({
         name: 'Company Name',
-        type: 'CORPORATIVA',
+        type: 'Corporativa',
       });
 
     expect(response.status).toBe(HttpStatus.CREATED);
@@ -47,7 +56,7 @@ describe('CompanyController (e2e)', () => {
     async (propertyName) => {
       const requestBody = {
         name: 'Company Name',
-        type: 'CORPORATIVA',
+        type: 'Corporativa',
       };
 
       delete requestBody[propertyName];

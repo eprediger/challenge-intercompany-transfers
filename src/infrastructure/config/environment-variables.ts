@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsInt, IsString, Max, Min } from 'class-validator';
+import { IsInt, IsString, Matches, Max, Min } from 'class-validator';
 
 export class EnvironmentVariables {
   @IsString()
@@ -10,4 +10,9 @@ export class EnvironmentVariables {
   @Min(0)
   @Max(65535)
   readonly PORT: number;
+
+  @IsString()
+  @IsString()
+  @Matches(/^file:\.\/\w+\.db$/, { message: 'DATABASE_URL must match the pattern file:./<name>.db' })
+  readonly DATABASE_URL: string;
 }

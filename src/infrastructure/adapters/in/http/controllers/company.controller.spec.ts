@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CompanyController } from './company.controller';
 import { CompanyTypes } from 'src/application/domain/company.type';
 import { CompanyService } from 'src/application/services/company.service';
+import { CreateCompanyDto } from '../dto/create-company.dto';
 
 describe('AppController', () => {
   let app: TestingModule;
@@ -13,7 +14,9 @@ describe('AppController', () => {
       providers: [
         {
           provide: 'ICompanyService',
-          useClass: CompanyService,
+          useValue: {
+            create: jest.fn()
+          },
         },
       ],
     }).compile();
@@ -25,11 +28,11 @@ describe('AppController', () => {
     it.each([
       {
         name: 'Acme Corporation',
-        type: CompanyTypes.PYME,
+        type: CompanyTypes.Pyme,
       },
       {
         name: 'Stark Industries',
-        type: CompanyTypes.CORPORATIVA,
+        type: CompanyTypes.Corporativa,
       },
     ])('should return a new company', (companyDto) => {
       const result = controller.create(companyDto);

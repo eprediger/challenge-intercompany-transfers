@@ -1,4 +1,4 @@
 export enum CompanyTypes {
-  PYME = 'PYME',
-  CORPORATIVA = 'CORPORATIVA',
+  Pyme = 'Pyme',
+  Corporativa = 'Corporativa',
 }

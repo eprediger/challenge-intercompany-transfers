@@ -9,7 +9,8 @@ export function validate(config: Record<string, unknown>) {
   });
 
   if (errors.length > 0) {
-    throw new Error(errors.toString());
+    throw new Error(`Configuration validation failed: ${errors.toString()}`);
   }
+
   return validatedConfig;
 }

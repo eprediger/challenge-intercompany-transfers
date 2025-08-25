@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { ICompanyService } from '../ports/out/services/company.service.interface';
-import { CreateCompanyDto } from 'src/infrastructure/adapters/in/http/dto/create-company.dto';
+import { Inject, Injectable } from '@nestjs/common';
 import { Company } from '../domain/entities/company';
+import { ICompanyService } from '../ports/in/services/company.service.interface';
+import type { ICompanyRepository } from '../ports/out/repositories/company.repository.interface';
 
 @Injectable()
 export class CompanyService implements ICompanyService {
-  constructor() {}
+  constructor(@Inject('ICompanyRepository') private readonly companyRepository: ICompanyRepository) { }
 
-  create(dto: CreateCompanyDto): Company {
-    return new Company(dto.name, dto.type);
+  async create(company: Company): Promise<Company> {
+    return this.companyRepository.create(company)
   }
 }
