@@ -6,6 +6,8 @@ import {
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
+import { PrismaClient } from '@prisma/client';
+import { PrismaService } from 'src/infrastructure/adapters/out/persistence/prisma.service';
 import { validate } from 'src/infrastructure/config/validate';
 import { CompanyModule } from 'src/infrastructure/modules/company.module';
 import request from 'supertest';
@@ -13,6 +15,7 @@ import { App } from 'supertest/types';
 
 describe('CompanyController (e2e)', () => {
   let app: INestApplication<App>;
+  let prismaClient: PrismaClient;
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
@@ -29,20 +32,28 @@ describe('CompanyController (e2e)', () => {
     app.enableVersioning({
       type: VersioningType.URI,
     });
-    app.useGlobalPipes(new ValidationPipe({
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-      whitelist: true,
-      forbidNonWhitelisted: false,
-    }));
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+        whitelist: true,
+        forbidNonWhitelisted: false,
+      }),
+    );
 
     await app.init();
+    prismaClient = app.get(PrismaService);
   });
 
   afterAll(async () => {
     await app.close();
+  });
+
+  afterEach(async () => {
+    // Clean up after tests
+    await prismaClient.company.deleteMany();
   });
 
   describe('Company Creation', () => {
@@ -85,22 +96,25 @@ describe('CompanyController (e2e)', () => {
       type: 'Pyme',
       subscriptionDate: '2025-08-05T20:00:00.000Z',
     };
+
     beforeAll(async () => {
-      await Promise.all([
-        {
-          name: 'Acme Corporation',
-          type: 'Pyme',
-          subscriptionDate: '2025-02-17T14:00:00.000Z',
-        },
-        {
-          name: 'Stark Industries',
-          type: 'Corporativa',
-          subscriptionDate: '2025-06-28T09:00:00.000Z',
-        },
-        expectedCompany,
-      ].map((company) =>
-        request(app.getHttpServer()).post('/v1/companies').send(company),
-      ));
+      await Promise.all(
+        [
+          {
+            name: 'Acme Corporation',
+            type: 'Pyme',
+            subscriptionDate: '2025-02-17T14:00:00.000Z',
+          },
+          {
+            name: 'Stark Industries',
+            type: 'Corporativa',
+            subscriptionDate: '2025-06-28T09:00:00.000Z',
+          },
+          expectedCompany,
+        ].map((company) =>
+          request(app.getHttpServer()).post('/v1/companies').send(company),
+        ),
+      );
     });
 
     it('should return companies created given a time period', async () => {

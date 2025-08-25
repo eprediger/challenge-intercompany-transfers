@@ -48,13 +48,11 @@ export class CompanyController {
   async find(
     @Query() query: CompanyQueryParams,
   ): Promise<CompanyResponseDto[]> {
-    const companies = await this.service.find(
-      {
-        subscriptionDateFrom: query.subscriptionDateFrom,
-        subscriptionDateTo: query.subscriptionDateTo
-      }
-    );
-    // Transform to response DTOs
+    const companies = await this.service.find({
+      subscriptionDateFrom: query.subscriptionDateFrom,
+      subscriptionDateTo: query.subscriptionDateTo,
+    });
+
     return companies.map((company) =>
       plainToInstance(CompanyResponseDto, company, {
         excludeExtraneousValues: true,
