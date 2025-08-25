@@ -12,6 +12,7 @@ jobs:
     env:
       NODE_ENV: 'testing'
       PORT: 3000
+      DATABASE_URL: 'file:./test.db'
 
     steps:
       - uses: actions/checkout@v4 # Checks out your repository code
@@ -23,5 +24,7 @@ jobs:
         run: npm ci # Installs project dependencies
       - name: Run tests
         run: npm test # Executes the npm test command
+      - name: Run Prisma Migrations
+        run: npx prisma migrate deploy
       - name: Run E2E tests
         run: npm run test:e2e # Executes the npm test command

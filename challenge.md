@@ -10,19 +10,19 @@ La tarea consiste en construir APIs que permitan gestionar información sobre em
 
 Debes implementar los siguientes 3 endpoints:
 
-1. Obtener las empresas que realizaron transferencias en el último mes.
-2. Obtener las empresas que se adhirieron en el último mes.
-3. Registrar la adhesión de una nueva empresa.
-   1. Empresa Pyme.
-   2. Empresa Corporativa.
+1. [ ] Obtener las empresas que realizaron transferencias en el último mes.
+2. [ ] Obtener las empresas que se adhirieron en el último mes.
+3. [x] Registrar la adhesión de una nueva empresa.
+   1. [x] Empresa Pyme.
+   2. [x] Empresa Corporativa.
 
 🧰 Requerimientos no funcionales
 
-- La API debe estar escrita en NestJs (standalone).
-- No se permite el uso de Docker.
-- No es necesario desplegar la API, pero debe poder ejecutarse localmente.
-- Se puede usar base de datos local, un archivo JSON o persistencia en memoria.
-- Si usás base de datos (relacional o no relacional), incluí una instancia embebida, simulada o en Cloud.
+- [x] La API debe estar escrita en NestJs (standalone).
+- [x] No se permite el uso de Docker.
+- [x] No es necesario desplegar la API, pero debe poder ejecutarse localmente.
+- [x] Se puede usar base de datos local, un archivo JSON o persistencia en memoria.
+- [x] Si usás base de datos (relacional o no relacional), incluí una instancia embebida, simulada o en Cloud.
 - Usá una arquitectura clara (idealmente Clean Architecture, Hexagonal, etc.)
   - Deseable: Hexagonal.
 
