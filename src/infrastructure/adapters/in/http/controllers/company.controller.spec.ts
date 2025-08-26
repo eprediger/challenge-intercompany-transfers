@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CompanyTypes } from 'src/application/domain/company.type';
 import { CompanyController } from './company.controller';
 
-describe('AppController', () => {
+describe('CompanyController', () => {
   let app: TestingModule;
   let controller: CompanyController;
 
@@ -14,6 +14,8 @@ describe('AppController', () => {
           provide: 'ICompanyService',
           useValue: {
             create: jest.fn(),
+            findTransferSenders: jest.fn(),
+            findCompaniesSubscribed: jest.fn(),
           },
         },
       ],

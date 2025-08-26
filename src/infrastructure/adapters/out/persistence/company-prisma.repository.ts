@@ -43,6 +43,34 @@ export class CompanyPrismaRepository implements ICompanyRepository {
     );
   }
 
+  async findTransferSenders(params: {
+    from: Date;
+    to: Date;
+  }): Promise<Company[]> {
+    const rows = await this.prismaService.company.findMany({
+      where: {
+        sentTransfers: {
+          some: {
+            sentDate: {
+              gt: params.from,
+              lt: params.to,
+            },
+          },
+        },
+      },
+    });
+
+    return rows.map(
+      (row) =>
+        new Company(
+          row.name,
+          row.type as CompanyTypes,
+          row.subscriptionDate,
+          row.id as UUID,
+        ),
+    );
+  }
+
   async findById(id: UUID): Promise<Company | null> {
     const row = await this.prismaService.company.findUnique({ where: { id } });
 

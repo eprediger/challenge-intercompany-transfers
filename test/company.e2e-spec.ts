@@ -119,7 +119,7 @@ describe('CompanyController (e2e)', () => {
 
     it('should return companies created given a time period', async () => {
       const response = await request(app.getHttpServer())
-        .get('/v1/companies')
+        .get('/v1/companies/subscriptions')
         .query({
           'from-date': '2025-07-25',
           'to-date': '2025-08-25',

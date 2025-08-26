@@ -16,8 +16,18 @@ export class CompanyService implements ICompanyService {
     return this.companyRepository.create(company);
   }
 
-  findSubscribed(params: { from: Date; to: Date }): Promise<Company[]> {
+  findCompaniesSubscribed(params: {
+    from: Date;
+    to: Date;
+  }): Promise<Company[]> {
     return this.companyRepository.findSubscribed({
+      from: params.from,
+      to: params.to,
+    });
+  }
+
+  findTransferSenders(params: { from: Date; to: Date }): Promise<Company[]> {
+    return this.companyRepository.findTransferSenders({
       from: params.from,
       to: params.to,
     });

@@ -90,37 +90,32 @@ describe('TransfersService', () => {
       expect(actualTransfer).toHaveProperty('id');
     });
 
-    it.skip('should throw an error if one or both companies do not exist', async () => {
+    it('should throw an error if one or both companies do not exist', async () => {
       // Arrange: sender exists, recipient does not
       companyFindByIdMock.mockImplementationOnce(async (id: UUID) => {
         if (id === senderId) return Promise.resolve(expectedSenderCompany);
-        throw new Error('not found');
+        throw new EntityNotFoundError(Company.name, id);
       });
-      companyFindByIdMock.mockImplementationOnce((_id: UUID) => {
-        throw new Error('not found');
+      companyFindByIdMock.mockImplementationOnce((id: UUID) => {
+        throw new EntityNotFoundError(Company.name, id);
       });
 
-      // Act & Assert
       await expect(service.create(createTransfer)).rejects.toThrow(
-        'One or more companies not found',
+        EntityNotFoundError,
       );
       expect(companyFindByIdMock).toHaveBeenCalledTimes(2);
     });
 
-    it.skip('should throw an error if one of the findById calls fails (promise rejected)', async () => {
-      // Arrange: sender resolves, recipient rejects
+    it('should throw an error if one of the findById calls fails (promise rejected)', async () => {
       companyFindByIdMock.mockImplementationOnce(async (id: UUID) => {
         if (id === senderId) return Promise.resolve(expectedSenderCompany);
-        throw new Error('not found');
+        throw new EntityNotFoundError(Company.name, id);
       });
       companyFindByIdMock.mockImplementationOnce((_id: UUID) => {
         throw new Error('Database error');
       });
 
-      // Act & Assert
-      await expect(service.create(createTransfer)).rejects.toThrow(
-        'One or more companies not found',
-      );
+      await expect(service.create(createTransfer)).rejects.toThrow();
       expect(companyFindByIdMock).toHaveBeenCalledTimes(2);
     });
   });

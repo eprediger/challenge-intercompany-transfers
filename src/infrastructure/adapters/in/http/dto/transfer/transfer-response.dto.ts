@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
 import type { UUID } from 'node:crypto';
 import { CompanyResponseDto } from '../company/company-response.dto';
+import { Transfer } from 'src/application/domain/entities/transfer.entity';
 
 export class TransferResponseDto {
   @ApiProperty({
@@ -35,7 +36,7 @@ export class TransferResponseDto {
     type: () => CompanyResponseDto,
   })
   @Expose({ name: 'senderCompany' })
-  @Transform(({ obj }) => obj.senderCompany)
+  @Transform(({ obj }: { obj: Transfer }) => obj.senderCompany)
   senderCompany: CompanyResponseDto;
 
   @ApiProperty({
@@ -43,6 +44,6 @@ export class TransferResponseDto {
     type: () => CompanyResponseDto,
   })
   @Expose({ name: 'recipientCompany' })
-  @Transform(({ obj }) => obj.recipientCompany)
+  @Transform(({ obj }: { obj: Transfer }) => obj.recipientCompany)
   recipientCompany: CompanyResponseDto;
 }

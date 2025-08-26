@@ -28,7 +28,7 @@ export class DateRangeParams {
     default: () => new Date().toISOString(),
   })
   @Expose({ name: 'to-date' })
-  @Transform(({ value }) => {
+  @Transform(({ value }: { value: string }) => {
     return value ? new Date(value) : new Date();
   })
   @IsDate()

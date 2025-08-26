@@ -14,7 +14,14 @@ export interface ICompanyService {
    * @param params The date range with 'from' and 'to' properties.
    * @returns An array of companies subscribed in the given period.
    */
-  findSubscribed(params: { from: Date; to: Date }): Promise<Company[]>;
+  findCompaniesSubscribed(params: { from: Date; to: Date }): Promise<Company[]>;
+
+  /**
+   * Finds companies that sent transfers within a given date range.
+   * @param params The date range with 'from' and 'to' properties.
+   * @returns An array of companies subscribed in the given period.
+   */
+  findTransferSenders(params: { from: Date; to: Date }): Promise<Company[]>;
 
   /**
    * Finds a company by its unique identifier.

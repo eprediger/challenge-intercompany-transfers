@@ -33,6 +33,7 @@ describe('CompanyPrismaRepository (integration)', () => {
 
   afterEach(async () => {
     // Clean up after tests
+    await prismaClient.transfer.deleteMany();
     await prismaClient.company.deleteMany();
   });
 
@@ -77,7 +78,7 @@ describe('CompanyPrismaRepository (integration)', () => {
     });
   });
 
-  describe('find', () => {
+  describe('findSubscribed', () => {
     const expectedCompany = new Company(
       'Wonka Industries',
       CompanyTypes.Pyme,
@@ -117,6 +118,72 @@ describe('CompanyPrismaRepository (integration)', () => {
       expect(foundCompanies[0].subscriptionDate.toISOString()).toBe(
         expectedCompany.subscriptionDate.toISOString(),
       );
+    });
+  });
+
+  describe('findTransferSenders', () => {
+    const senderCompany = new Company(
+      'Sender Company',
+      CompanyTypes.Pyme,
+      new Date('2025-03-10T12:00:00.000Z'),
+    );
+    const nonSenderCompany = new Company(
+      'NonSender Company',
+      CompanyTypes.Corporativa,
+      new Date('2025-04-15T15:00:00.000Z'),
+    );
+
+    beforeAll(async () => {
+      // Create companies
+      await repository.create(senderCompany);
+      await repository.create(nonSenderCompany);
+
+      // Insert a transfer sent by senderCompany within the date range
+      await prismaClient.transfer.createMany({
+        data: [
+          {
+            id: randomUUID(),
+            amount: 1000,
+            sentDate: new Date('2025-08-10T10:00:00.000Z'),
+            senderId: senderCompany.id,
+            recipientId: nonSenderCompany.id,
+          },
+          // Insert a transfer sent by nonSenderCompany outside the date range
+          {
+            id: randomUUID(),
+            amount: 500,
+            sentDate: new Date('2025-08-11T10:00:00.000Z'),
+            senderId: nonSenderCompany.id,
+            recipientId: senderCompany.id,
+          },
+        ],
+      });
+    });
+
+    it('should return companies that sent transfers within the given date range', async () => {
+      const from = new Date('2025-07-10T00:00:00.000Z');
+      const to = new Date('2025-08-10T23:59:59.999Z');
+
+      const senders = await repository.findTransferSenders({ from, to });
+
+      expect(Array.isArray(senders)).toBe(true);
+      expect(senders).toHaveLength(1);
+      expect(senders[0].id).toBe(senderCompany.id);
+      expect(senders[0].name).toBe(senderCompany.name);
+      expect(senders[0].type).toBe(senderCompany.type);
+      expect(senders[0].subscriptionDate.toISOString()).toBe(
+        senderCompany.subscriptionDate.toISOString(),
+      );
+    });
+
+    it('should return an empty array if no companies sent transfers in the range', async () => {
+      const from = new Date('2025-07-09T00:00:00.000Z');
+      const to = new Date('2025-08-09T23:59:59.999Z');
+
+      const senders = await repository.findTransferSenders({ from, to });
+
+      expect(Array.isArray(senders)).toBe(true);
+      expect(senders).toHaveLength(0);
     });
   });
 
