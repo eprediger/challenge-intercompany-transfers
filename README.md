@@ -27,9 +27,7 @@
 
 ### Aspectos omitidos
 
-En esta versión inicial, se decidió prescindir de algunas validaciones a fin de priorizar los elementos esenciales que permitieran cumplir con el alcance definido.
-
-A saber:
+En esta versión inicial, se decidió prescindir de algunas validaciones a fin de priorizar los elementos esenciales que permitieran cumplir con el alcance definido. Estas son:
 
 - Validaciones encapsuladas mediante la creación de _value objects_, por ejemplo:
   - En cadenas de texto, como el nombre de Empresa, no permitir cadenas vacías.

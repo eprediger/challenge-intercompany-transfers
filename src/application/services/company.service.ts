@@ -4,6 +4,7 @@ import { ICompanyService } from '../ports/in/services/company.service.interface'
 import type { ICompanyRepository } from '../ports/out/repositories/company.repository.interface';
 import { UUID } from 'crypto';
 import { EntityNotFoundError } from '../domain/errors/entity-not-found.error';
+import { DateRange } from '../domain/value-objects/date-range';
 
 @Injectable()
 export class CompanyService implements ICompanyService {
@@ -16,21 +17,12 @@ export class CompanyService implements ICompanyService {
     return this.companyRepository.create(company);
   }
 
-  findCompaniesSubscribed(params: {
-    from: Date;
-    to: Date;
-  }): Promise<Company[]> {
-    return this.companyRepository.findSubscribed({
-      from: params.from,
-      to: params.to,
-    });
+  findCompaniesSubscribed(dateRange: DateRange): Promise<Company[]> {
+    return this.companyRepository.findSubscribed(dateRange);
   }
 
-  findTransferSenders(params: { from: Date; to: Date }): Promise<Company[]> {
-    return this.companyRepository.findTransferSenders({
-      from: params.from,
-      to: params.to,
-    });
+  findTransferSenders(dateRange: DateRange): Promise<Company[]> {
+    return this.companyRepository.findTransferSenders(dateRange);
   }
 
   async findById(id: UUID): Promise<Company> {

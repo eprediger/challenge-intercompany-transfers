@@ -5,6 +5,7 @@ import { PrismaService } from './prisma.service';
 import { Company } from 'src/application/domain/entities/company.entity';
 import { ICompanyRepository } from 'src/application/ports/out/repositories/company.repository.interface';
 import { CompanyTypes } from 'src/application/domain/company.type';
+import { DateRange } from 'src/application/domain/value-objects/date-range';
 
 @Injectable()
 export class CompanyPrismaRepository implements ICompanyRepository {
@@ -22,12 +23,12 @@ export class CompanyPrismaRepository implements ICompanyRepository {
     return company;
   }
 
-  async findSubscribed(params: { from: Date; to: Date }): Promise<Company[]> {
+  async findSubscribed(dateRange: DateRange): Promise<Company[]> {
     const rows = await this.prismaService.company.findMany({
       where: {
         subscriptionDate: {
-          gte: params.from,
-          lte: params.to,
+          gte: dateRange.from,
+          lte: dateRange.to,
         },
       },
     });
@@ -43,17 +44,14 @@ export class CompanyPrismaRepository implements ICompanyRepository {
     );
   }
 
-  async findTransferSenders(params: {
-    from: Date;
-    to: Date;
-  }): Promise<Company[]> {
+  async findTransferSenders(dateRange: DateRange): Promise<Company[]> {
     const rows = await this.prismaService.company.findMany({
       where: {
         sentTransfers: {
           some: {
             sentDate: {
-              gt: params.from,
-              lt: params.to,
+              gt: dateRange.from,
+              lt: dateRange.to,
             },
           },
         },

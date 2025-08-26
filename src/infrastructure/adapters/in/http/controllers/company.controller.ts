@@ -18,6 +18,7 @@ import {
   OPERATION_TYPES,
   type OperationTypes,
 } from 'src/application/domain/operation.type';
+import { DateRange } from 'src/application/domain/value-objects/date-range';
 
 @Controller({
   path: 'companies',
@@ -27,7 +28,7 @@ import {
 export class CompanyController {
   private readonly operations: Record<
     OperationTypes,
-    (params: { from: Date; to: Date }) => Promise<Company[]>
+    (dateRange: DateRange) => Promise<Company[]>
   >;
 
   constructor(
@@ -85,10 +86,9 @@ export class CompanyController {
     @Param('operation') operation: OperationTypes,
     @Query() query: DateRangeParams,
   ): Promise<CompanyResponseDto[]> {
-    const companies = await this.operations[operation]({
-      from: query.fromDate,
-      to: query.toDate,
-    });
+    const dateRange = new DateRange(query.fromDate, query.toDate);
+
+    const companies = await this.operations[operation](dateRange);
 
     return companies.map((c) =>
       plainToInstance(CompanyResponseDto, c, { excludeExtraneousValues: true }),

@@ -6,7 +6,7 @@ export class DateRangeParams {
   @ApiProperty({
     name: 'from-date',
     description:
-      'Start of the date range (inclusive). Must be a valid ISO 8601 date string.',
+      'Start of the date range. Must be a valid ISO 8601 date string.',
     example: '2025-01-01',
     type: String,
     format: 'date-time',
@@ -19,8 +19,7 @@ export class DateRangeParams {
 
   @ApiProperty({
     name: 'to-date',
-    description:
-      'End of the date range (inclusive). Must be a valid ISO 8601 date string.',
+    description: 'End of the date range. Must be a valid ISO 8601 date string.',
     example: '2025-08-25',
     type: String,
     format: 'date-time',
