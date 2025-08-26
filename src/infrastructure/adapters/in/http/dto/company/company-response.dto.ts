@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import type { UUID } from 'crypto';
+import type { UUID } from 'node:crypto';
 import { CompanyTypes } from 'src/application/domain/company.type';
 
 export class CompanyResponseDto {

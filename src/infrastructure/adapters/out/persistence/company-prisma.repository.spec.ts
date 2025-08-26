@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, UUID } from 'node:crypto';
 import { CompanyTypes } from 'src/application/domain/company.type';
-import { Company } from 'src/application/domain/entities/company';
+import { Company } from 'src/application/domain/entities/company.entity';
 import { CompanyPrismaRepository } from './company-prisma.repository';
 import { PrismaService } from './prisma.service';
 
@@ -117,6 +117,38 @@ describe('CompanyPrismaRepository (integration)', () => {
       expect(foundCompanies[0].subscriptionDate.toISOString()).toBe(
         expectedCompany.subscriptionDate.toISOString(),
       );
+    });
+  });
+
+  describe('findById', () => {
+    let createdCompany: Company;
+
+    beforeAll(async () => {
+      createdCompany = new Company(
+        'Umbrella Corp',
+        CompanyTypes.Corporativa,
+        new Date('2025-09-01T10:00:00.000Z'),
+      );
+      await repository.create(createdCompany);
+    });
+
+    it('should return the company when a valid id is provided', async () => {
+      const foundCompany = await repository.findById(createdCompany.id);
+
+      expect(foundCompany).toBeInstanceOf(Company);
+      expect(foundCompany.id).toBe(createdCompany.id);
+      expect(foundCompany.name).toBe(createdCompany.name);
+      expect(foundCompany.type).toBe(createdCompany.type);
+      expect(foundCompany.subscriptionDate.toISOString()).toBe(
+        createdCompany.subscriptionDate.toISOString(),
+      );
+    });
+
+    it('should return null when the company id does not exist', async () => {
+      const nonExistentId: UUID = '00000000-0000-0000-0000-000000000000';
+
+      const companyOrNull = await repository.findById(nonExistentId);
+      expect(companyOrNull).toBeNull();
     });
   });
 });

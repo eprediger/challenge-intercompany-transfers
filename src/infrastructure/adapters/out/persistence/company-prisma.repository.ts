@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Company } from 'src/application/domain/entities/company';
+import { Company } from 'src/application/domain/entities/company.entity';
 import { ICompanyRepository } from 'src/application/ports/out/repositories/company.repository.interface';
 import { PrismaService } from './prisma.service';
 import { Prisma } from '@prisma/client';
@@ -44,5 +44,20 @@ export class CompanyPrismaRepository implements ICompanyRepository {
           row.id as UUID,
         ),
     );
+  }
+
+  async findById(id: UUID): Promise<Company | null> {
+    const row = await this.prismaService.company.findUnique({ where: { id } });
+
+    if (row) {
+      return new Company(
+        row.name,
+        row.type as CompanyTypes,
+        row.subscriptionDate,
+        row.id as UUID,
+      );
+    }
+
+    return null;
   }
 }

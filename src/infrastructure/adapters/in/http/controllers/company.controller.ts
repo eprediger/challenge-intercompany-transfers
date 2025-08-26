@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
-import { Company } from 'src/application/domain/entities/company';
+import { Company } from 'src/application/domain/entities/company.entity';
 import type { ICompanyService } from 'src/application/ports/in/services/company.service.interface';
-import { CompanyResponseDto } from '../dto/company-response.dto';
-import { CreateCompanyDto } from '../dto/create-company.dto';
+import { CompanyResponseDto } from '../dto/company/company-response.dto';
+import { CreateCompanyDto } from '../dto/company/create-company.dto';
 import { DateRangeParams } from '../dto/company-query-params.dto';
 
 @Controller({
