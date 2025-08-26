@@ -121,8 +121,8 @@ describe('CompanyController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .get('/v1/companies')
         .query({
-          'subscription-date-from': '2025-07-25',
-          'subscription-date-to': '2025-08-25',
+          'from-date': '2025-07-25',
+          'to-date': '2025-08-25',
         });
 
       expect(response.status).toBe(HttpStatus.OK);

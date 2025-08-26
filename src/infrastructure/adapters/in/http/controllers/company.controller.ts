@@ -5,7 +5,7 @@ import { Company } from 'src/application/domain/entities/company';
 import type { ICompanyService } from 'src/application/ports/in/services/company.service.interface';
 import { CompanyResponseDto } from '../dto/company-response.dto';
 import { CreateCompanyDto } from '../dto/create-company.dto';
-import { CompanyQueryParams } from '../dto/company-query-params.dto';
+import { DateRangeParams } from '../dto/company-query-params.dto';
 
 @Controller({
   path: 'companies',
@@ -15,7 +15,7 @@ import { CompanyQueryParams } from '../dto/company-query-params.dto';
 export class CompanyController {
   constructor(
     @Inject('ICompanyService') private readonly service: ICompanyService,
-  ) { }
+  ) {}
 
   @Post()
   @ApiResponse({
@@ -45,12 +45,10 @@ export class CompanyController {
     description: 'List of companies filtered by subscription date range.',
     type: [CompanyResponseDto],
   })
-  async find(
-    @Query() query: CompanyQueryParams,
-  ): Promise<CompanyResponseDto[]> {
+  async find(@Query() query: DateRangeParams): Promise<CompanyResponseDto[]> {
     const companies = await this.service.find({
-      subscriptionDateFrom: query.subscriptionDateFrom,
-      subscriptionDateTo: query.subscriptionDateTo,
+      subscriptionDateFrom: query.fromDate,
+      subscriptionDateTo: query.toDate,
     });
 
     return companies.map((company) =>

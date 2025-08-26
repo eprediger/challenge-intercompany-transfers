@@ -16,7 +16,7 @@
 - Se identificaron las siguientes entidades:
   - Empresa (`Company`)
     - Con los atributos nombre (`name`), tipo (`type`) y fecha de adhesión (`subscriptionDate`). Sobre el último campo se tomó la decisión de permitir al cliente ingresar el valor, esto es, que la adhesión no necesariamente sea en el momento de la creación en la aplicación.
-- Para resolver **la consulta de las empresas que se adhirieron en el último mes**, se tomó la definición de exponer un contrato que reciba dos fechas como ventana de tiempo, donde el parámetro `subscription-date-from` es obligatorio, mientras que `subscription-date-to`, opcional. De esta forma, para responder la consulta planteada, el request sería `GET {host}/v1/companies?subscription-date-from=2025-07-25` (siendo hoy 2025-08-25).
+- Para resolver **la consulta de las empresas que se adhirieron en el último mes**, se tomó la definición de exponer un contrato que reciba dos fechas como ventana de tiempo, donde el parámetro `from-date` es obligatorio, mientras que `to-date`, opcional. De esta forma, para responder la consulta planteada, el request sería `GET {host}/v1/companies?from-date=2025-07-25` (siendo hoy 2025-08-25).
 - Persistencia: se optó por una instancia de `SQLite`
 
 ## Documentación
