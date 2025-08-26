@@ -1,9 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiSchema } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
 import type { UUID } from 'node:crypto';
 import { CompanyResponseDto } from '../company/company-response.dto';
 import { Transfer } from 'src/application/domain/entities/transfer.entity';
 
+@ApiSchema({ name: 'Created Transfer Response' })
 export class TransferResponseDto {
   @ApiProperty({
     description: 'Unique identifier of the company',

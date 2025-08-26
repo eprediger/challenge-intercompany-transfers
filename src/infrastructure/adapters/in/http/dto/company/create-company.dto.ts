@@ -1,8 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiSchema } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { CompanyTypes } from 'src/application/domain/company.type';
 
+@ApiSchema({ name: 'Create Company' })
 export class CreateCompanyDto {
   @ApiProperty({
     description: 'Name of the company',

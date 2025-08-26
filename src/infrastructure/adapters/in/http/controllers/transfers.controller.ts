@@ -1,10 +1,19 @@
-import { Body, Controller, HttpStatus, Inject, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Inject,
+  Post,
+  UseFilters,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { CreateTransfer } from 'src/application/domain/entities/create-transfer.entity';
 import type { ITransfersService } from 'src/application/ports/in/services/transfer.service.interface';
 import { CreateTransferDto } from '../dto/transfer/create-transfer.dto';
 import { TransferResponseDto } from '../dto/transfer/transfer-response.dto';
+import { EntityNotFoundExceptionFilter } from '../filters/entity-not-found-exception.filter';
+import { ProblemResponseDto } from '../dto/company/problem-response.dto';
 
 @Controller({
   path: 'transfers',
@@ -27,6 +36,13 @@ export class TransfersController {
     status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request. Validation failed for the input data.',
   })
+  @ApiResponse({
+    status: HttpStatus.UNPROCESSABLE_ENTITY,
+    description:
+      'Unprocessable Entity. One of the referenced companies ids do not exist.',
+    type: ProblemResponseDto,
+  })
+  @UseFilters(EntityNotFoundExceptionFilter)
   async create(@Body() dto: CreateTransferDto): Promise<TransferResponseDto> {
     const createTransfer = new CreateTransfer(
       dto.sentDate,

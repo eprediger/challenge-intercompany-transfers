@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiSchema } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsDate,
@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import type { UUID } from 'node:crypto';
 
+@ApiSchema({ name: 'Create Transfer' })
 export class CreateTransferDto {
   @ApiProperty({
     description: 'Date when the transfer was sent',
