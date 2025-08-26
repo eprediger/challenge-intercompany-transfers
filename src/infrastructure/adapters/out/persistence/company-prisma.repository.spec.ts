@@ -151,7 +151,7 @@ describe('CompanyPrismaRepository (integration)', () => {
           // Insert a transfer sent by nonSenderCompany outside the date range
           {
             id: randomUUID(),
-            amount: 500,
+            amount: 600.1,
             sentDate: new Date('2025-08-11T10:00:00.000Z'),
             senderId: nonSenderCompany.id,
             recipientId: senderCompany.id,

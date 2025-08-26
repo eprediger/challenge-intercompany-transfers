@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpStatus,
   Inject,
   Param,
   Post,
@@ -10,15 +11,15 @@ import {
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { Company } from 'src/application/domain/entities/company.entity';
-import type { ICompanyService } from 'src/application/ports/in/services/company.service.interface';
-import { CompanyResponseDto } from '../dto/company/company-response.dto';
-import { CreateCompanyDto } from '../dto/company/create-company.dto';
-import { DateRangeParams } from '../dto/date-range-params.dto';
 import {
   OPERATION_TYPES,
   type OperationTypes,
 } from 'src/application/domain/operation.type';
 import { DateRange } from 'src/application/domain/value-objects/date-range';
+import type { ICompanyService } from 'src/application/ports/in/services/company.service.interface';
+import { CompanyResponseDto } from '../dto/company/company-response.dto';
+import { CreateCompanyDto } from '../dto/company/create-company.dto';
+import { DateRangeParams } from '../dto/date-range-params.dto';
 
 @Controller({
   path: 'companies',
@@ -43,12 +44,12 @@ export class CompanyController {
   @Post()
   @ApiOperation({ summary: 'Subscribe a new company' })
   @ApiResponse({
-    status: 201,
+    status: HttpStatus.CREATED,
     description: 'The company has been successfully created.',
     type: CompanyResponseDto,
   })
   @ApiResponse({
-    status: 400,
+    status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request. Validation failed for the input data.',
   })
   async create(@Body() dto: CreateCompanyDto): Promise<Company> {
@@ -78,7 +79,7 @@ export class CompanyController {
     example: 'subscriptions',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'List of companies filtered by subscription date range.',
     type: [CompanyResponseDto],
   })

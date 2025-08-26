@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Inject, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { CreateTransfer } from 'src/application/domain/entities/create-transfer.entity';
@@ -19,12 +19,12 @@ export class TransfersController {
   @Post()
   @ApiOperation({ summary: 'Create a new transfer between companies' })
   @ApiResponse({
-    status: 201,
+    status: HttpStatus.CREATED,
     description: 'The company has been successfully created.',
     type: TransferResponseDto,
   })
   @ApiResponse({
-    status: 400,
+    status: HttpStatus.BAD_REQUEST,
     description: 'Bad Request. Validation failed for the input data.',
   })
   async create(@Body() dto: CreateTransferDto): Promise<TransferResponseDto> {
