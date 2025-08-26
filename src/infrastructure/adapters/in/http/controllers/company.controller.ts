@@ -16,7 +16,7 @@ import { CreateCompanyDto } from '../dto/company/create-company.dto';
 import { DateRangeParams } from '../dto/date-range-params.dto';
 import {
   OPERATION_TYPES,
-  OperationTypes,
+  type OperationTypes,
 } from 'src/application/domain/operation.type';
 
 @Controller({

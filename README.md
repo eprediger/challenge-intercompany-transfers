@@ -22,7 +22,8 @@
 
 ### Modelado consultas
 
-- Para resolver **la consulta de las empresas que se adhirieron en el último mes**, se tomó la definición de exponer un contrato que reciba dos fechas como ventana de tiempo, donde el parámetro `from-date` es obligatorio, mientras que `to-date`, opcional. De esta forma, para responder la consulta planteada, el request sería `GET {host}/v1/companies?from-date=2025-07-25` (siendo hoy 2025-08-25).
+- Para resolver **la consulta de las empresas que se adhirieron en el último mes**, se tomó la definición de exponer un contrato que reciba dos fechas como ventana de tiempo, donde el parámetro `from-date` es obligatorio, mientras que `to-date`, opcional. De esta forma, para responder la consulta planteada, el request sería `GET {host}/v1/companies/subscriptions?from-date=2025-07-25` (siendo hoy 2025-08-25).
+- Para **la consulta de las empresas que realizaron transferencias en el último mes**, reutilizó el contrato de la ruta anterior, de esta forma se evita la duplicación de código, extendiendo la funcionalidad existente. Una ruta ejemplo que responde esta consulta es `GET {host}/v1/companies/transfers?from-date=2025-07-25`
 
 ### Aspectos omitidos
 

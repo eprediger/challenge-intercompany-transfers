@@ -10,7 +10,7 @@ La tarea consiste en construir APIs que permitan gestionar información sobre em
 
 Debes implementar los siguientes 3 endpoints:
 
-1. [ ] Obtener las empresas que realizaron transferencias en el último mes.
+1. [x] Obtener las empresas que realizaron transferencias en el último mes.
 2. [x] Obtener las empresas que se adhirieron en el último mes.
 3. [x] Registrar la adhesión de una nueva empresa.
    1. [x] Empresa Pyme.
