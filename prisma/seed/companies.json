@@ -1,52 +1,62 @@
 [
   {
-    "name": "Acme Corporation",
-    "type": "Pyme",
-    "subscriptionDate": "2025-02-17T14:00:00.000Z"
-  },
-  {
-    "name": "Stark Industries",
-    "type": "Corporativa",
-    "subscriptionDate": "2025-06-28T09:00:00.000Z"
-  },
-  {
-    "name": "Wonka Industries",
-    "type": "Pyme",
-    "subscriptionDate": "2025-01-05T20:00:00.000Z"
-  },
-  {
-    "name": "Umbrella Corporation",
-    "type": "Corporativa",
-    "subscriptionDate": "2025-04-13T03:00:00.000Z"
-  },
-  {
-    "name": "Weyland-Yutani Corporation",
-    "type": "Corporativa",
-    "subscriptionDate": "2025-07-09T18:00:00.000Z"
-  },
-  {
-    "name": "Cyberdyne Systems",
-    "type": "Corporativa",
-    "subscriptionDate": "2025-03-30T11:00:00.000Z"
-  },
-  {
-    "name": "Momcorp",
-    "type": "Corporativa",
-    "subscriptionDate": "2025-05-22T07:00:00.000Z"
-  },
-  {
-    "name": "Wayne Enterprises",
-    "type": "Corporativa",
-    "subscriptionDate": "2025-01-28T16:00:00.000Z"
-  },
-  {
+    "id": "7e2f0b57-9617-4c50-8405-ecc14940bdf0",
     "name": "Dunder Mifflin",
     "type": "Pyme",
     "subscriptionDate": "2025-08-03T21:00:00.000Z"
   },
   {
+    "id": "5e569f98-5ad5-43d9-9dd9-b86e2e57138b",
+    "name": "Acme Corporation",
+    "type": "Pyme",
+    "subscriptionDate": "2025-02-17T14:00:00.000Z"
+  },
+  {
+    "id": "050426a7-5d6a-424f-97d4-7828f3ebfc6b",
+    "name": "Wonka Industries",
+    "type": "Pyme",
+    "subscriptionDate": "2025-01-05T20:00:00.000Z"
+  },
+  {
+    "id": "7f6586e3-2422-4705-b554-0835b9b1b2a5",
     "name": "Soylent Corporation",
     "type": "Pyme",
     "subscriptionDate": "2025-03-08T05:00:00.000Z"
+  },
+  {
+    "id": "990b116f-9bcd-4b7c-867e-a8f5de90e705",
+    "name": "Umbrella Corporation",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-04-13T03:00:00.000Z"
+  },
+  {
+    "id": "73acdbd6-7f83-42cd-8acf-e8d98b3022be",
+    "name": "Momcorp",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-05-22T07:00:00.000Z"
+  },
+  {
+    "id": "6f157c32-4841-465c-a4ae-ba36e6210431",
+    "name": "Wayne Enterprises",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-01-28T16:00:00.000Z"
+  },
+  {
+    "id": "333f5ffc-6232-4d21-a8b7-9dece5b609d2",
+    "name": "Weyland-Yutani Corporation",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-07-09T18:00:00.000Z"
+  },
+  {
+    "id": "0737fa74-af38-48dd-a7fe-37ebf5995913",
+    "name": "Cyberdyne Systems",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-03-30T11:00:00.000Z"
+  },
+  {
+    "id": "d6b74044-6240-4339-8c43-749ffeda08fb",
+    "name": "Stark Industries",
+    "type": "Corporativa",
+    "subscriptionDate": "2025-06-28T09:00:00.000Z"
   }
 ]

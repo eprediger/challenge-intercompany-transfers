@@ -1,23 +1,34 @@
 import { CompanyType, PrismaClient } from "@prisma/client";
+import { Decimal } from '@prisma/client/runtime/library';
 import { randomUUID } from "node:crypto";
 import seedCompanies from "./companies.json";
+import seedTransfers from "./transfers.json"
 
 const prisma = new PrismaClient();
 
 async function main() {
   try {
-    const seedingPromises = seedCompanies.map((company) =>
-      prisma.company.create({
-        data: {
-          id: randomUUID(),
-          name: company.name,
-          type: company.type as CompanyType,
-          subscriptionDate: company.subscriptionDate,
-        },
-      })
+    await Promise.allSettled(
+      [
+        prisma.company.createMany({
+          data: seedCompanies.map((company) => ({
+            id: company.id,
+            name: company.name,
+            type: company.type as CompanyType,
+            subscriptionDate: company.subscriptionDate,
+          }))
+        }),
+        prisma.transfer.createMany({
+          data: seedTransfers.map((transfer) => ({
+            id: randomUUID(),
+            sentDate: transfer.sentDate,
+            amount: new Decimal(transfer.amount),
+            senderId: transfer.senderId,
+            recipientId: transfer.recipientId,
+          }))
+        })
+      ]
     );
-
-    await Promise.allSettled(seedingPromises);
   } catch (error) {
     console.error(error);
   }
