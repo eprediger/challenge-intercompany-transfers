@@ -17,5 +17,11 @@ import { CompanyPrismaRepository } from '../adapters/out/persistence/company-pri
       useClass: CompanyPrismaRepository,
     },
   ],
+  exports: [
+    {
+      provide: 'ICompanyService',
+      useClass: CompanyService,
+    },
+  ],
 })
 export class CompanyModule {}

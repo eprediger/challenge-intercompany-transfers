@@ -15,12 +15,28 @@ datasource db {
 }
 
 model Company {
-  id                String      @id
-  name              String
-  type              CompanyType
-  subscriptionDate  DateTime    @map("subscription_date")
+  id               String      @id
+  name             String
+  type             CompanyType
+  subscriptionDate DateTime    @map("subscription_date")
+
+  sentTransfers     Transfer[] @relation("SentTransfers")
+  receivedTransfers Transfer[] @relation("ReceivedTransfers")
 
   @@map("companies")
+}
+
+model Transfer {
+  id          String   @id
+  sentDate    DateTime @map("sent_date")
+  amount      Decimal
+  senderId    String   @map("sender_id")
+  recipientId String   @map("recipient_id")
+
+  sender    Company @relation("SentTransfers", fields: [senderId], references: [id])
+  recipient Company @relation("ReceivedTransfers", fields: [recipientId], references: [id])
+
+  @@map("transfers")
 }
 
 enum CompanyType {

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Company } from 'src/application/domain/entities/company.entity';
-import { ICompanyRepository } from 'src/application/ports/out/repositories/company.repository.interface';
-import { PrismaService } from './prisma.service';
 import { Prisma } from '@prisma/client';
 import { UUID } from 'node:crypto';
+import { PrismaService } from './prisma.service';
+import { Company } from 'src/application/domain/entities/company.entity';
+import { ICompanyRepository } from 'src/application/ports/out/repositories/company.repository.interface';
 import { CompanyTypes } from 'src/application/domain/company.type';
 
 @Injectable()

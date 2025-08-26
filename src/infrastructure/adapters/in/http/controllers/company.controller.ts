@@ -5,7 +5,7 @@ import { Company } from 'src/application/domain/entities/company.entity';
 import type { ICompanyService } from 'src/application/ports/in/services/company.service.interface';
 import { CompanyResponseDto } from '../dto/company/company-response.dto';
 import { CreateCompanyDto } from '../dto/company/create-company.dto';
-import { DateRangeParams } from '../dto/company-query-params.dto';
+import { DateRangeParams } from '../dto/date-range-params.dto';
 
 @Controller({
   path: 'companies',
