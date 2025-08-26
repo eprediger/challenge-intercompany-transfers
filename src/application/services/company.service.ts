@@ -16,13 +16,10 @@ export class CompanyService implements ICompanyService {
     return this.companyRepository.create(company);
   }
 
-  find(params: {
-    subscriptionDateFrom: Date;
-    subscriptionDateTo: Date;
-  }): Promise<Company[]> {
-    return this.companyRepository.find({
-      subscriptionDateFrom: params.subscriptionDateFrom,
-      subscriptionDateTo: params.subscriptionDateTo,
+  findSubscribed(params: { from: Date; to: Date }): Promise<Company[]> {
+    return this.companyRepository.findSubscribed({
+      from: params.from,
+      to: params.to,
     });
   }
 

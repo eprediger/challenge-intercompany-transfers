@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { Company } from 'src/application/domain/entities/company.entity';
 import type { ICompanyService } from 'src/application/ports/in/services/company.service.interface';
@@ -15,9 +15,10 @@ import { DateRangeParams } from '../dto/date-range-params.dto';
 export class CompanyController {
   constructor(
     @Inject('ICompanyService') private readonly service: ICompanyService,
-  ) {}
+  ) { }
 
   @Post()
+  @ApiOperation({ summary: 'Subscribe a new company' })
   @ApiResponse({
     status: 201,
     description: 'The company has been successfully created.',
@@ -40,15 +41,18 @@ export class CompanyController {
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'Get companies subscribed in a given period of time',
+  })
   @ApiResponse({
     status: 200,
     description: 'List of companies filtered by subscription date range.',
     type: [CompanyResponseDto],
   })
   async find(@Query() query: DateRangeParams): Promise<CompanyResponseDto[]> {
-    const companies = await this.service.find({
-      subscriptionDateFrom: query.fromDate,
-      subscriptionDateTo: query.toDate,
+    const companies = await this.service.findSubscribed({
+      from: query.fromDate,
+      to: query.toDate,
     });
 
     return companies.map((company) =>

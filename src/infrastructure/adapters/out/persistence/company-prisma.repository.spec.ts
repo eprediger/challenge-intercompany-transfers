@@ -106,9 +106,9 @@ describe('CompanyPrismaRepository (integration)', () => {
       const subscriptionDateFrom = new Date('2025-07-25T00:00:00.000Z');
       const subscriptionDateTo = new Date('2025-08-25T23:59:59.999Z');
 
-      const foundCompanies = await repository.find({
-        subscriptionDateFrom,
-        subscriptionDateTo,
+      const foundCompanies = await repository.findSubscribed({
+        from: subscriptionDateFrom,
+        to: subscriptionDateTo,
       });
 
       expect(foundCompanies).toHaveLength(1);

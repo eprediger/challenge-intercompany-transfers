@@ -2,7 +2,10 @@ import { CreateTransfer } from 'src/application/domain/entities/create-transfer.
 import { Transfer } from 'src/application/domain/entities/transfer.entity';
 
 export interface ITransfersService {
+  /**
+   * Creates a new transfer.
+   * @param transfer The transfer data to create.
+   * @returns The created transfer entity.
+   */
   create(transfer: CreateTransfer): Promise<Transfer>;
-  // findAll(): Promise<Transfer[]>;
-  // findOne(id: UUID): Promise<Transfer>;
 }

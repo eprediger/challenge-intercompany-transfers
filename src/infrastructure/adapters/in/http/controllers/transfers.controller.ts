@@ -1,10 +1,12 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { CreateTransfer } from 'src/application/domain/entities/create-transfer.entity';
 import type { ITransfersService } from 'src/application/ports/in/services/transfer.service.interface';
 import { CreateTransferDto } from '../dto/transfer/create-transfer.dto';
 import { TransferResponseDto } from '../dto/transfer/transfer-response.dto';
+import { CompanyResponseDto } from '../dto/company/company-response.dto';
+import { DateRangeParams } from '../dto/date-range-params.dto';
 
 @Controller({
   path: 'transfers',
@@ -17,6 +19,7 @@ export class TransfersController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new transfer between companies' })
   @ApiResponse({
     status: 201,
     description: 'The company has been successfully created.',
@@ -41,12 +44,20 @@ export class TransfersController {
     });
   }
 
-  /* @Get()
-  findAll() {
-    return this.service.findAll();
+  @Get('/companies')
+  @ApiOperation({
+    summary: 'Get companies that made transfers in a given period of time',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of companies filtered by subscription date range.',
+    type: [CompanyResponseDto],
+  })
+  findAll(@Query() query: DateRangeParams) {
+    return [];
   }
 
-  @Get(':id')
+  /* @Get(':id')
   findOne(@Param('id') id: string) {
     return this.service.findOne(+id);
   } */

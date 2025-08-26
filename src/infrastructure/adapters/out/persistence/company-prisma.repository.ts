@@ -22,15 +22,12 @@ export class CompanyPrismaRepository implements ICompanyRepository {
     return company;
   }
 
-  async find(params: {
-    subscriptionDateFrom: Date;
-    subscriptionDateTo: Date;
-  }): Promise<Company[]> {
+  async findSubscribed(params: { from: Date; to: Date }): Promise<Company[]> {
     const rows = await this.prismaService.company.findMany({
       where: {
         subscriptionDate: {
-          gte: params.subscriptionDateFrom,
-          lte: params.subscriptionDateTo,
+          gte: params.from,
+          lte: params.to,
         },
       },
     });
