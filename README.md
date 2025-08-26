@@ -35,7 +35,6 @@ En esta versión inicial, se decidió prescindir de algunas validaciones a fin d
 - Validaciones de negocio:
   - No permitir que la fecha de adhesión de una Empresa esa en el futuro.
   - No permitir que la fecha de envío de una Transferencia sea menor que la adhesión de cualquiera de las Empresas.
-  - No permitir que en el objeto de **rango de fechas** (`DateRangeParams`), la **fecha desde** (`fromDate`) sea mayor o igual que la **fecha hasta** (`toDate`)
 - Fue omitido en esta etapa el manejo de errores de la capa de persistencia.
 - No fue incorporado un modelo de paginación para las rutas de consulta.
 
