@@ -1,5 +1,15 @@
 # Intercompany transfers
 
+## Tabla de Contenidos
+
+- [Decisiones de diseño](#decisiones-de-diseño)
+  - [Modelado consultas](#modelado-consultas)
+  - [Aspectos omitidos](#aspectos-omitidos)
+- [Documentación](#documentación)
+  - [OpenAPI (Swagger)](#openapi-swagger)
+  - [Input/Output Lambda](#inputoutput-lambda)
+- [Ejecución API](#ejecución-api)
+
 ## Enunciado _Challenge_
 
 [La descripción del desafío se encuentra aquí](challenge.md)
@@ -46,7 +56,75 @@ En algunos casos, las validaciones se encuentran en la capa de infraestructura (
 
 La documentación de los distintos endpoints de la aplicación se encuentra disponible en la ruta `{host}/docs`
 
-### Ejecución
+### Input/Output Lambda
+
+_Input esperado (happy path):_
+
+```json
+{
+  "httpMethod": "POST",
+  "path": "/adhesions",
+  "headers": {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  },
+  "body": "{\"name\":\"Monsters, Inc.\",\"type\":\"Corporativa\",\"subscriptionDate\":\"1973-08-25T13:47:24.108Z\"}"
+}
+```
+
+_Posibles outputs:_
+
+- 201 Created:
+
+```json
+{
+  "statusCode": 201,
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Request-ID": "6f6e1a1b-6c52-41bd-b0a0-0d6c0c7c8b79"
+  },
+  "body": "{\"id\":\"f379a26f-9827-433a-90e2-9b866434caf4\",\"name\":\"Monsters, Inc.\",\"type\":\"Corporativa\",\"subscriptionDate\":\"1973-08-25T13:47:24.108Z\"}"
+}
+```
+
+- 400 Bad Request (formato invalido de JSON o errores de validación)
+
+```json
+{
+  "statusCode": 400,
+  "headers": {
+    "Content-Type": "application/json"
+    "X-Request-ID": "6f6e1a1b-6c52-41bd-b0a0-0d6c0c7c8b79"
+  },
+  "body": "{\"success\":false,\"error\":{\"code\":\"INVALID_JSON\",\"message\":\"The request body is not valid JSON\"}}"
+}
+```
+
+- 500 Internal Server Error
+
+```json
+{
+  "statusCode": 500,
+  "headers": {
+    "Content-Type": "application/json"
+    "X-Request-ID": "6f6e1a1b-6c52-41bd-b0a0-0d6c0c7c8b79"
+  },
+  "body": "{\"success\":false,\"error\":{\"code\":\"INTERNAL_ERROR\",\"message\":\"Internal server error\"}}"
+}
+```
+
+**Diagrama**
+
+![Integración Lambda con Sistema](integration.svg)
+
+Integrando la lambda al circuito como se muestra en el diagrama anterior, el circuito es:
+
+1. El cliente realiza el request HTTP al AWS API Gateway.
+2. Éste componente inicia la ejecución del handler de la lambda, definido en [`lambda/src/company-subscription/handler.ts`](lambda/src/company-subscription/handler.ts).
+3. Se valida internamente el request y envía un nuevo request HTTP hacia la API desarrollada (POST /v1/companies)
+4. Se deshace el camino anterior con la respuesta de la API hasta el cliente.
+
+## Ejecución API
 
 Crear archivo `.env` (`$ cp .env.example .env`)
 

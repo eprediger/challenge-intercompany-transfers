@@ -81,7 +81,9 @@
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"
     },
-    "setupFilesAfterEnv": ["../test/jest-e2e.setup.ts"]
+    "setupFilesAfterEnv": [
+      "../test/jest-e2e.setup.ts"
+    ]
   },
   "pnpm": {
     "onlyBuiltDependencies": [
