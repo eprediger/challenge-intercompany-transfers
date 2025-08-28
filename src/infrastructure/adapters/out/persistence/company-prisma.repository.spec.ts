@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client';
 import { randomUUID, UUID } from 'node:crypto';
 import { CompanyTypes } from 'src/application/domain/company.type';
 import { Company } from 'src/application/domain/entities/company.entity';
+import { DateRange } from 'src/application/domain/value-objects/date-range';
+import { Page } from 'src/application/domain/value-objects/page';
 import { CompanyPrismaRepository } from './company-prisma.repository';
 import { PrismaService } from './prisma.service';
 
@@ -107,10 +109,10 @@ describe('CompanyPrismaRepository (integration)', () => {
       const subscriptionDateFrom = new Date('2025-07-25T00:00:00.000Z');
       const subscriptionDateTo = new Date('2025-08-25T23:59:59.999Z');
 
-      const foundCompanies = await repository.findSubscribed({
-        from: subscriptionDateFrom,
-        to: subscriptionDateTo,
-      });
+      const dateRange = new DateRange(subscriptionDateFrom, subscriptionDateTo);
+      const page = Page.create(1, 1);
+
+      const foundCompanies = await repository.findSubscribed(dateRange, page);
 
       expect(foundCompanies).toHaveLength(1);
       expect(foundCompanies[0].name).toBe(expectedCompany.name);
@@ -164,7 +166,10 @@ describe('CompanyPrismaRepository (integration)', () => {
       const from = new Date('2025-07-10T00:00:00.000Z');
       const to = new Date('2025-08-10T23:59:59.999Z');
 
-      const senders = await repository.findTransferSenders({ from, to });
+      const dateRange = new DateRange(from, to);
+      const page = Page.create(1, 1);
+
+      const senders = await repository.findTransferSenders(dateRange, page);
 
       expect(Array.isArray(senders)).toBe(true);
       expect(senders).toHaveLength(1);
@@ -180,9 +185,12 @@ describe('CompanyPrismaRepository (integration)', () => {
       const from = new Date('2025-07-09T00:00:00.000Z');
       const to = new Date('2025-08-09T23:59:59.999Z');
 
-      const senders = await repository.findTransferSenders({ from, to });
+      const dateRange = new DateRange(from, to);
+      const page = Page.create(1, 1);
 
-      expect(Array.isArray(senders)).toBe(true);
+      const senders = await repository.findTransferSenders(dateRange, page);
+
+      expect(senders).toBeInstanceOf(Array);
       expect(senders).toHaveLength(0);
     });
   });

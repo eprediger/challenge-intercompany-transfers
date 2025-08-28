@@ -1,6 +1,7 @@
 import { UUID } from 'node:crypto';
 import { Company } from 'src/application/domain/entities/company.entity';
 import { DateRange } from 'src/application/domain/value-objects/date-range';
+import { Page } from 'src/application/domain/value-objects/page';
 
 export interface ICompanyService {
   /**
@@ -13,16 +14,18 @@ export interface ICompanyService {
   /**
    * Finds companies that subscribed within a given date range.
    * @param params The date range with 'from' and 'to' properties.
+   * @param page The page object to limit the result
    * @returns An array of companies subscribed in the given period.
    */
-  findCompaniesSubscribed(dateRange: DateRange): Promise<Company[]>;
+  findCompaniesSubscribed(dateRange: DateRange, page: Page): Promise<Company[]>;
 
   /**
    * Finds companies that sent transfers within a given date range.
    * @param params The date range with 'from' and 'to' properties.
+   * @param page The page object to limit the result
    * @returns An array of companies subscribed in the given period.
    */
-  findTransferSenders(dateRange: DateRange): Promise<Company[]>;
+  findTransferSenders(dateRange: DateRange, page: Page): Promise<Company[]>;
 
   /**
    * Finds a company by its unique identifier.

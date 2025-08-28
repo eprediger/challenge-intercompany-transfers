@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
 import { IsDate } from 'class-validator';
 
@@ -17,13 +17,12 @@ export class DateRangeParams {
   @IsDate()
   fromDate: Date;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: 'to-date',
     description: 'End of the date range. Must be a valid ISO 8601 date string.',
     example: '2025-08-25',
     type: String,
     format: 'date-time',
-    required: false,
     default: () => new Date().toISOString(),
   })
   @Expose({ name: 'to-date' })

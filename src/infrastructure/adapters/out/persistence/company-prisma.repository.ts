@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { UUID } from 'node:crypto';
-import { PrismaService } from './prisma.service';
-import { Company } from 'src/application/domain/entities/company.entity';
-import { ICompanyRepository } from 'src/application/ports/out/repositories/company.repository.interface';
 import { CompanyTypes } from 'src/application/domain/company.type';
+import { Company } from 'src/application/domain/entities/company.entity';
 import { DateRange } from 'src/application/domain/value-objects/date-range';
+import { ICompanyRepository } from 'src/application/ports/out/repositories/company.repository.interface';
+import { PrismaService } from './prisma.service';
+import { Page } from 'src/application/domain/value-objects/page';
 
 @Injectable()
 export class CompanyPrismaRepository implements ICompanyRepository {
@@ -23,7 +24,7 @@ export class CompanyPrismaRepository implements ICompanyRepository {
     return company;
   }
 
-  async findSubscribed(dateRange: DateRange): Promise<Company[]> {
+  async findSubscribed(dateRange: DateRange, page: Page): Promise<Company[]> {
     const rows = await this.prismaService.company.findMany({
       where: {
         subscriptionDate: {
@@ -31,6 +32,8 @@ export class CompanyPrismaRepository implements ICompanyRepository {
           lte: dateRange.to,
         },
       },
+      skip: page.skip,
+      take: page.size,
     });
 
     return rows.map(
@@ -44,7 +47,10 @@ export class CompanyPrismaRepository implements ICompanyRepository {
     );
   }
 
-  async findTransferSenders(dateRange: DateRange): Promise<Company[]> {
+  async findTransferSenders(
+    dateRange: DateRange,
+    page: Page,
+  ): Promise<Company[]> {
     const rows = await this.prismaService.company.findMany({
       where: {
         sentTransfers: {
@@ -56,6 +62,8 @@ export class CompanyPrismaRepository implements ICompanyRepository {
           },
         },
       },
+      skip: page.skip,
+      take: page.size,
     });
 
     return rows.map(

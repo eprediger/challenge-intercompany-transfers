@@ -16,10 +16,12 @@ import {
   type OperationTypes,
 } from 'src/application/domain/operation.type';
 import { DateRange } from 'src/application/domain/value-objects/date-range';
+import { Page } from 'src/application/domain/value-objects/page';
 import type { ICompanyService } from 'src/application/ports/in/services/company.service.interface';
 import { CompanyResponseDto } from '../dto/company/company-response.dto';
 import { CreateCompanyDto } from '../dto/company/create-company.dto';
 import { DateRangeParams } from '../dto/date-range-params.dto';
+import { PageOptionsDto } from '../dto/page-options.dto';
 
 @Controller({
   path: 'companies',
@@ -29,7 +31,7 @@ import { DateRangeParams } from '../dto/date-range-params.dto';
 export class CompanyController {
   private readonly operations: Record<
     OperationTypes,
-    (dateRange: DateRange) => Promise<Company[]>
+    (dateRange: DateRange, page: Page) => Promise<Company[]>
   >;
 
   constructor(
@@ -86,10 +88,12 @@ export class CompanyController {
   async find(
     @Param('operation') operation: OperationTypes,
     @Query() query: DateRangeParams,
+    @Query() pagination: PageOptionsDto,
   ): Promise<CompanyResponseDto[]> {
     const dateRange = new DateRange(query.fromDate, query.toDate);
+    const page = Page.create(pagination.page, pagination.take);
 
-    const companies = await this.operations[operation](dateRange);
+    const companies = await this.operations[operation](dateRange, page);
 
     return companies.map((c) =>
       plainToInstance(CompanyResponseDto, c, { excludeExtraneousValues: true }),
