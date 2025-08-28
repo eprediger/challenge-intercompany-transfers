@@ -2,6 +2,7 @@
 
 ## Tabla de Contenidos
 
+- [Enunciado _Challenge_](#enunciado-challenge)
 - [Decisiones de diseño](#decisiones-de-diseño)
   - [Modelado consultas](#modelado-consultas)
   - [Aspectos omitidos](#aspectos-omitidos)
@@ -9,6 +10,8 @@
   - [OpenAPI (Swagger)](#openapi-swagger)
   - [Input/Output Lambda](#inputoutput-lambda)
 - [Ejecución API](#ejecución-api)
+  - [Migraciones](#migraciones)
+  - [Database seeding](#database-seeding)
 
 ## Enunciado _Challenge_
 
@@ -27,7 +30,7 @@
   - Empresa (`Company`)
     - Con los atributos nombre (`name`), tipo (`type`) y fecha de adhesión (`subscriptionDate`). Sobre el último campo se tomó la decisión de permitir al cliente ingresar el valor, esto es, que la adhesión no necesariamente sea en el momento de la creación en la aplicación.
   - Transferencia (`Transfer`)
-    - Cuenta con los atributos fecha de envío (`sentDate`), total (`amount`), empresa emisora (`senderCompany`) y empresa receptora (`recipientCompany`). Para la creación de una transferencia, el `DTO` (`CreateTransferDto`) recibe únicamente los `ids` de las empresa, y es la aplicación en el `TransfersService` posee la lógica de negocio validando que ambas empresa existan, de esta forma podemos crear transferencias para tener información para responder la consulta de **las empresas que realizaron transferencias en el último mes**.
+    - Cuenta con los atributos **fecha de envío** (`sentDate`), **total** (`amount`), **empresa emisora** (`senderCompany`) y **empresa receptora** (`recipientCompany`). Para la creación de una transferencia, el `DTO` (`CreateTransferDto`) recibe únicamente los `ids` de las empresa, y es la aplicación en el `TransfersService` posee la lógica de negocio validando que ambas empresa existan, de esta forma podemos crear transferencias para tener información para responder la consulta de **las empresas que realizaron transferencias en el último mes**.
 - Persistencia: se optó por una instancia de `SQLite`
 
 ### Modelado consultas
@@ -44,9 +47,11 @@ En esta versión inicial, se decidió prescindir de algunas validaciones a fin d
   - En valores numéricos, como el monto de una transferencia, no permitir valores negativos.
 - Validaciones de negocio:
   - No permitir que la fecha de adhesión de una Empresa esa en el futuro.
-  - No permitir que la fecha de envío de una Transferencia sea menor que la adhesión de cualquiera de las Empresas.
-- Fue omitido en esta etapa el manejo de errores de la capa de persistencia.
+  - No permitir que la fecha de envío de una transferencia sea menor que la adhesión de cualquiera de las Empresas.
+  - No permitir que una transferencia tenga el mismo emisora y receptora.
+- Fue omitido en esta etapa el manejo de errores de la capa de persistencia
 - No fue incorporado un modelo de paginación para las rutas de consulta.
+- No se valida el tipo operación a consultar Empresas ([ver implementación](src/infrastructure/adapters/in/http/controllers/company.controller.ts#L92) en la línea del parámetro `@Param('operation') operation: OperationTypes`)
 
 En algunos casos, las validaciones se encuentran en la capa de infraestructura (DTOs con `class-transformer`) ya que se favoreció la documentación del Swagger.
 
