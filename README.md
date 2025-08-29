@@ -1,7 +1,5 @@
 # Intercompany transfers
 
-## Tabla de Contenidos
-
 - [Enunciado _Challenge_](#enunciado-challenge)
 - [Decisiones de diseño](#decisiones-de-diseño)
   - [Modelado consultas](#modelado-consultas)
