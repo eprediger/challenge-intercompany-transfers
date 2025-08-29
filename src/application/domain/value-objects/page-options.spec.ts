@@ -1,5 +1,5 @@
 import { InvalidPageError } from '../errors/invalid-page.error';
-import { Page } from './page';
+import { PageOptions } from './page-options';
 
 describe('Page', () => {
   it('should be created from page number and take for the amount of elements', () => {
@@ -7,7 +7,7 @@ describe('Page', () => {
     const expectedPageSize = 10;
     const expectedSkip = 0;
 
-    const page = Page.create(expectedPageNumber, expectedPageSize);
+    const page = PageOptions.create(expectedPageNumber, expectedPageSize);
 
     expect(page.number).toBe(expectedPageNumber);
     expect(page.size).toBe(expectedPageSize);
@@ -16,15 +16,17 @@ describe('Page', () => {
 
   describe('should fail for', () => {
     it.each([0, -1])('non-positive page number', (pageNumber: number) => {
-      expect(() => Page.create(pageNumber, 10)).toThrow(InvalidPageError);
+      expect(() => PageOptions.create(pageNumber, 10)).toThrow(
+        InvalidPageError,
+      );
     });
 
     it.each([0, -1])('non-positive page size', (pageSize: number) => {
-      expect(() => Page.create(1, pageSize)).toThrow(InvalidPageError);
+      expect(() => PageOptions.create(1, pageSize)).toThrow(InvalidPageError);
     });
 
     it('page size greater than 50', () => {
-      expect(() => Page.create(1, 51)).toThrow(InvalidPageError);
+      expect(() => PageOptions.create(1, 51)).toThrow(InvalidPageError);
     });
   });
 
@@ -38,7 +40,7 @@ describe('Page', () => {
     ])(
       `should return $expectedSkip for page number $pageNumber of size ${pageSize}`,
       ({ pageNumber, expectedSkip }) => {
-        const page = Page.create(pageNumber, pageSize);
+        const page = PageOptions.create(pageNumber, pageSize);
 
         expect(page.skip).toBe(expectedSkip);
       },

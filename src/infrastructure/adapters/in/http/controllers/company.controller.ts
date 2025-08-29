@@ -2,26 +2,34 @@ import {
   Body,
   Controller,
   Get,
-  HttpStatus,
   Inject,
   Param,
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { plainToInstance } from 'class-transformer';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { Company } from 'src/application/domain/entities/company.entity';
 import {
   OPERATION_TYPES,
   type OperationTypes,
 } from 'src/application/domain/operation.type';
 import { DateRange } from 'src/application/domain/value-objects/date-range';
-import { Page } from 'src/application/domain/value-objects/page';
+import { PageOptions } from 'src/application/domain/value-objects/page-options';
 import type { ICompanyService } from 'src/application/ports/in/services/company.service.interface';
+import { ApiPaginatedResponse } from '../decorators/api-paginated-response';
 import { CompanyResponseDto } from '../dto/company/company-response.dto';
 import { CreateCompanyDto } from '../dto/company/create-company.dto';
 import { DateRangeParams } from '../dto/date-range-params.dto';
 import { PageOptionsDto } from '../dto/page-options.dto';
+import { PageResponseDto } from '../dto/page-response.dto';
+import type { ICompanyQueryService } from 'src/application/ports/in/services/company.query.service.interface';
 
 @Controller({
   path: 'companies',
@@ -31,27 +39,29 @@ import { PageOptionsDto } from '../dto/page-options.dto';
 export class CompanyController {
   private readonly operations: Record<
     OperationTypes,
-    (dateRange: DateRange, page: Page) => Promise<Company[]>
+    (dateRange: DateRange, page: PageOptions) => Promise<[Company, number]>
   >;
 
   constructor(
     @Inject('ICompanyService') private readonly service: ICompanyService,
+    @Inject('ICompanyQueryService')
+    private readonly queryService: ICompanyQueryService,
   ) {
     this.operations = {
-      transfers: this.service.findTransferSenders.bind(this.service),
-      subscriptions: this.service.findCompaniesSubscribed.bind(this.service),
+      transfers: this.queryService.findTransferSenders.bind(this.service),
+      subscriptions: this.queryService.findCompaniesSubscribed.bind(
+        this.service,
+      ),
     };
   }
 
   @Post()
   @ApiOperation({ summary: 'Subscribe a new company' })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
+  @ApiCreatedResponse({
     description: 'The company has been successfully created.',
     type: CompanyResponseDto,
   })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
+  @ApiBadRequestResponse({
     description: 'Bad Request. Validation failed for the input data.',
   })
   async create(@Body() dto: CreateCompanyDto): Promise<Company> {
@@ -80,23 +90,33 @@ export class CompanyController {
       'The operation to perform: "subscriptions" for companies that subscribed in a period, "transfers" for companies that made transfers in a period.',
     example: 'subscriptions',
   })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'List of companies filtered by subscription date range.',
-    type: [CompanyResponseDto],
-  })
+  @ApiPaginatedResponse(CompanyResponseDto)
   async find(
     @Param('operation') operation: OperationTypes,
     @Query() query: DateRangeParams,
     @Query() pagination: PageOptionsDto,
-  ): Promise<CompanyResponseDto[]> {
+  ): Promise<PageResponseDto<CompanyResponseDto>> {
     const dateRange = new DateRange(query.fromDate, query.toDate);
-    const page = Page.create(pagination.page, pagination.take);
+    const pageOptions = PageOptions.create(pagination.page, pagination.take);
 
-    const companies = await this.operations[operation](dateRange, page);
-
-    return companies.map((c) =>
-      plainToInstance(CompanyResponseDto, c, { excludeExtraneousValues: true }),
+    const [companies, count] = await this.operations[operation](
+      dateRange,
+      pageOptions,
     );
+
+    const totalPages = Math.ceil(count / pageOptions.size);
+    const plainCompanies = instanceToPlain(companies);
+
+    return plainToInstance(PageResponseDto<CompanyResponseDto>, {
+      items: plainCompanies,
+      metadata: {
+        count,
+        totalPages: totalPages,
+        page: pageOptions.number,
+        size: pageOptions.size,
+        hasPreviousPage: pageOptions.number > 1,
+        hasNextPage: pageOptions.number < totalPages,
+      },
+    });
   }
 }

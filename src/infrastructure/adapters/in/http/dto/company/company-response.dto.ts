@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 import type { UUID } from 'node:crypto';
 import { CompanyTypes } from 'src/application/domain/company.type';
 
-@ApiSchema({ name: 'Created Company Response' })
+@ApiSchema({ name: 'Company' })
 export class CompanyResponseDto {
   @ApiProperty({
     description: 'Unique identifier of the company',

@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CompanyTypes } from 'src/application/domain/company.type';
 import { CompanyController } from './company.controller';
+import { Company } from 'src/application/domain/entities/company.entity';
+import { DateRange } from 'src/application/domain/value-objects/date-range';
+import { PageOptions } from 'src/application/domain/value-objects/page-options';
 
 describe('CompanyController', () => {
   let app: TestingModule;
@@ -13,9 +16,20 @@ describe('CompanyController', () => {
         {
           provide: 'ICompanyService',
           useValue: {
-            create: jest.fn(),
-            findTransferSenders: jest.fn(),
-            findCompaniesSubscribed: jest.fn(),
+            create: jest.fn<Promise<Company>, [Company]>(),
+          },
+        },
+        {
+          provide: 'ICompanyQueryService',
+          useValue: {
+            findTransferSenders: jest.fn<
+              Promise<[Company[], number]>,
+              [dateRange: DateRange, page: PageOptions]
+            >(),
+            findCompaniesSubscribed: jest.fn<
+              Promise<[Company[], number]>,
+              [dateRange: DateRange, page: PageOptions]
+            >(),
           },
         },
       ],

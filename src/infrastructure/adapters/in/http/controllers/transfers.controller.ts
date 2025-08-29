@@ -1,19 +1,18 @@
+import { Body, Controller, Inject, Post, UseFilters } from '@nestjs/common';
 import {
-  Body,
-  Controller,
-  HttpStatus,
-  Inject,
-  Post,
-  UseFilters,
-} from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { CreateTransfer } from 'src/application/domain/entities/create-transfer.entity';
 import type { ITransfersService } from 'src/application/ports/in/services/transfer.service.interface';
+import { ProblemResponseDto } from '../dto/company/problem-response.dto';
 import { CreateTransferDto } from '../dto/transfer/create-transfer.dto';
 import { TransferResponseDto } from '../dto/transfer/transfer-response.dto';
 import { EntityNotFoundExceptionFilter } from '../filters/entity-not-found-exception.filter';
-import { ProblemResponseDto } from '../dto/company/problem-response.dto';
 
 @Controller({
   path: 'transfers',
@@ -27,17 +26,14 @@ export class TransfersController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new transfer between companies' })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
+  @ApiCreatedResponse({
     description: 'The company has been successfully created.',
     type: TransferResponseDto,
   })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
+  @ApiBadRequestResponse({
     description: 'Bad Request. Validation failed for the input data.',
   })
-  @ApiResponse({
-    status: HttpStatus.UNPROCESSABLE_ENTITY,
+  @ApiUnprocessableEntityResponse({
     description:
       'Unprocessable Entity. One of the referenced companies ids do not exist.',
     type: ProblemResponseDto,

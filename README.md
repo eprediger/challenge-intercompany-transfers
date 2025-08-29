@@ -34,7 +34,9 @@
 ### Modelado consultas
 
 - Para resolver **la consulta de las empresas que se adhirieron en el último mes**, se tomó la definición de exponer un contrato que reciba dos fechas como ventana de tiempo, donde el parámetro `from-date` es obligatorio, mientras que `to-date`, opcional. De esta forma, para responder la consulta planteada, el request sería `GET {host}/v1/companies/subscriptions?from-date=2025-07-25` (siendo hoy 2025-08-25).
-- Para **la consulta de las empresas que realizaron transferencias en el último mes**, reutilizó el contrato de la ruta anterior, de esta forma se evita la duplicación de código, extendiendo la funcionalidad existente. Una ruta ejemplo que responde esta consulta es `GET {host}/v1/companies/transfers?from-date=2025-07-25`
+- Para **la consulta de las empresas que realizaron transferencias en el último mes**, reutilizó el contrato de la ruta anterior, de esta forma se evita la duplicación de código, extendiendo la funcionalidad existente. Una ruta ejemplo que responde esta consulta es `GET {host}/v1/companies/transfers?from-date=2025-07-25`.
+
+Ambas consultas cuentas con un modelo de paginación para mejorar la _performance_ y disminuir el consumo de recursos evitando consultar toda la información existente a la base de datos.
 
 ### Aspectos omitidos
 
@@ -47,11 +49,9 @@ En esta versión inicial, se decidió prescindir de algunas validaciones a fin d
   - No permitir que la fecha de adhesión de una Empresa esa en el futuro.
   - No permitir que la fecha de envío de una transferencia sea menor que la adhesión de cualquiera de las Empresas.
   - No permitir que una transferencia tenga el mismo emisora y receptora.
-- Fue omitido en esta etapa el manejo de errores de la capa de persistencia
-- No fue incorporado un modelo de paginación para las rutas de consulta.
+- Fue omitido en esta etapa el manejo de errores de la capa de persistencia.
 - No se valida el tipo operación a consultar Empresas ([ver implementación](src/infrastructure/adapters/in/http/controllers/company.controller.ts#L92) en la línea del parámetro `@Param('operation') operation: OperationTypes`)
-
-En algunos casos, las validaciones se encuentran en la capa de infraestructura (DTOs con `class-transformer`) ya que se favoreció la documentación del Swagger.
+- En algunos casos, las validaciones se encuentran en la capa de infraestructura (DTOs con `class-transformer`) ya que se favoreció la documentación del Swagger.
 
 ## Documentación
 

@@ -7,7 +7,7 @@ import { ITransferRepository } from 'src/application/ports/out/repositories/tran
 
 @Injectable()
 export class TransferPrismaRepository implements ITransferRepository {
-  constructor(private readonly prismaService: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) {}
 
   async create(transfer: Transfer): Promise<Transfer> {
     const data: Prisma.TransferCreateInput = {

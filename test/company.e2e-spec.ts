@@ -7,13 +7,15 @@ import {
 import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { PrismaClient } from '@prisma/client';
+import { CompanyResponseDto } from 'src/infrastructure/adapters/in/http/dto/company/company-response.dto';
+import { PageResponseDto } from 'src/infrastructure/adapters/in/http/dto/page-response.dto';
 import { PrismaService } from 'src/infrastructure/adapters/out/persistence/prisma.service';
 import { validate } from 'src/infrastructure/config/validate';
 import { CompanyModule } from 'src/infrastructure/modules/company.module';
 import request from 'supertest';
 import { App } from 'supertest/types';
 
-describe('CompanyController (e2e)', () => {
+describe('Company Controller (e2e)', () => {
   let app: INestApplication<App>;
   let prismaClient: PrismaClient;
 
@@ -125,11 +127,20 @@ describe('CompanyController (e2e)', () => {
           'to-date': '2025-08-25',
         });
 
+      const body = response.body as PageResponseDto<CompanyResponseDto>;
+      const companiesDto = body.items;
+
       expect(response.status).toBe(HttpStatus.OK);
-      expect(response.body).toHaveLength(1);
-      expect(response.body).toEqual(
+      expect(body).toHaveProperty('items');
+      expect(companiesDto).toHaveLength(1);
+      expect(companiesDto).toEqual(
         expect.arrayContaining([expect.objectContaining(expectedCompany)]),
       );
+    });
+    describe('Parameters validations', () => {
+      it.todo('should return bad request for an invalid operation');
+      it.todo('should return bad request for a non-positive page number');
+      it.todo('should return bad request for a non-positive page size');
     });
   });
 });

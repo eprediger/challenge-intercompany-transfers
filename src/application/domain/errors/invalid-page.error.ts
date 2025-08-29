@@ -1,10 +1,5 @@
 import { DomainError } from './domain.error';
-
-export type ErrorDetails = {
-  field: string;
-  code: string;
-  message: string;
-};
+import { ErrorDetails } from './error-details.type';
 
 export class InvalidPageError extends DomainError {
   constructor(details: ErrorDetails[]) {

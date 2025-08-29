@@ -5,20 +5,21 @@ import {
   validateSync,
   ValidationError,
 } from 'class-validator';
-import { ErrorDetails, InvalidPageError } from '../errors/invalid-page.error';
+import { InvalidPageError } from '../errors/invalid-page.error';
+import { ErrorDetails } from '../errors/error-details.type';
 
-export class Page {
+export class PageOptions {
   private static readonly MINIMUM_PAGE_NUMBER = 1;
   private static readonly MINIMUM_PAGE_SIZE = 1;
   private static readonly MAXIMUM_PAGE_SIZE = 50;
 
   @IsInt()
-  @Min(Page.MINIMUM_PAGE_NUMBER)
+  @Min(PageOptions.MINIMUM_PAGE_NUMBER)
   public readonly number: number;
 
   @IsInt()
-  @Min(Page.MINIMUM_PAGE_SIZE)
-  @Max(Page.MAXIMUM_PAGE_SIZE)
+  @Min(PageOptions.MINIMUM_PAGE_SIZE)
+  @Max(PageOptions.MAXIMUM_PAGE_SIZE)
   public readonly size: number;
 
   private constructor(number: number, size: number) {
@@ -28,15 +29,14 @@ export class Page {
 
   /**
    * Creates a new Page instance after validating the page number and size.
-   * Throws InvalidPageNumberError if the page number is not positive.
-   * Throws InvalidPageSizeError if the page size is not positive.
+   * Throws InvalidPageError if the page number or the page size is not positive.
    *
    * @param number - The page number (must be a positive integer).
    * @param size - The page size (must be a positive integer).
    * @returns A validated Page instance.
    */
   public static create(number: number, size: number) {
-    const page = new Page(number, size);
+    const page = new PageOptions(number, size);
     const errorDetails = validateSync(page).map(
       (error: ValidationError): ErrorDetails => ({
         field: error.property,

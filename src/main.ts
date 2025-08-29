@@ -26,12 +26,14 @@ async function bootstrap() {
     .setTitle('Intercompany transfers')
     .setVersion('1.0')
     .addTag('Companies')
+    .addTag('Transfers')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);
 
   const configService = app.get(ConfigService);
-  const port = configService.get<number>('PORT');
+
+  const port = configService.get<string>('PORT');
 
   await app.listen(port);
 }

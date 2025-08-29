@@ -13,6 +13,10 @@ import { CompanyPrismaRepository } from '../adapters/out/persistence/company-pri
       useClass: CompanyService,
     },
     {
+      provide: 'ICompanyQueryService',
+      useClass: CompanyService,
+    },
+    {
       provide: 'ICompanyRepository',
       useClass: CompanyPrismaRepository,
     },
